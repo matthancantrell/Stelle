@@ -3,6 +3,7 @@
   "displayName": "Stelle",
   "description": "",
   "version": "0.0.1",
+  "publisher": "Matthan Cantrell",
   "engines": {
     "vscode": "^1.83.0"
   },
@@ -20,6 +21,10 @@
       {
         "command": "stelle.testCommand",
         "title": "Test Command"
+      },
+      {
+        "command": "stelle.start",
+        "title": "Start coding with Stelle!"
       }
     ]
   },

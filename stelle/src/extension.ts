@@ -27,6 +27,18 @@ export function activate(context: vscode.ExtensionContext) {
 	};
 
 	context.subscriptions.push(vscode.commands.registerCommand(testCommand, commandHandler));
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand('stelle.start', () => {
+			// Create & Show New Webview
+			const panel = vscode.window.createWebviewPanel(
+				'stelle', // Identifies type of webview. Internal use.
+				'Stelle', // Title of the panel. Displayed to user
+				vscode.ViewColumn.One, // Editor Column to show the new webview panel within
+				{} // Webview options go here
+			);
+		})
+	);
 }
 
 // This method is called when your extension is deactivated
