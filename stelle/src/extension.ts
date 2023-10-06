@@ -16,10 +16,17 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('stelle.helloWorld', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Stelle!');
+		vscode.window.showInformationMessage('Ask Stelle code related questions!');
 	});
 
 	context.subscriptions.push(disposable);
+
+	const testCommand = 'stelle.testCommand';
+	const commandHandler = (name: string = 'Stelle') => {
+		console.log(`Hello ${name}!!!`);
+	};
+
+	context.subscriptions.push(vscode.commands.registerCommand(testCommand, commandHandler));
 }
 
 // This method is called when your extension is deactivated

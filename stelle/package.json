@@ -16,6 +16,10 @@
       {
         "command": "stelle.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "stelle.testCommand",
+        "title": "Test Command"
       }
     ]
   },
