@@ -53,8 +53,9 @@ function getWebviewContent() {
 </head>
 <body>
 	<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
-	<form>
-		<input type="text" id="fname" name="fname"
+	<form id="userInput" method="POST">
+		<input type="text" id="userText" placeholder="Talk to Stelle here!">
+		<button type="button" id="submitUserText"> Submit </button>
 	<form/>
 </body>
 </html>`;
