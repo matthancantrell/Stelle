@@ -35,7 +35,9 @@ export function activate(context: vscode.ExtensionContext) {
 				'stelle', // Identifies type of webview. Internal use.
 				'Stelle', // Title of the panel. Displayed to user
 				vscode.ViewColumn.Two, // Editor Column to show the new webview panel within
-				{} // Webview options go here
+				{
+					enableScripts: true
+				} // Webview options go here
 			);
 
 			panel.webview.html = getWebviewContent();
@@ -45,20 +47,27 @@ export function activate(context: vscode.ExtensionContext) {
 
 function getWebviewContent() {
 	return `<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Cat Coding</title>
-</head>
-<body>
-	<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
-	<form id="userInput" method="POST">
-		<input type="text" id="userText" placeholder="Talk to Stelle here!">
-		<button type="button" id="submitUserText"> Submit </button>
-	<form/>
-</body>
-</html>`;
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Cat Coding</title>
+		<script>
+	
+			function EmptyText() {
+				var object = document.getElementById('userText');
+				object.value = '';
+			}
+		</script>
+	</head>
+	<body>
+		<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
+		<form id="userInput" method="POST">
+			<input type="text" id="userText" placeholder="Talk to Stelle here!">
+			<button type="button" onclick="EmptyText()" id="submitUserText"> Submit </button>
+		<form/>
+	</body>
+	</html>`;
 }
 
 // This method is called when your extension is deactivated
