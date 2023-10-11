@@ -1,12 +1,11 @@
 // HTML For Webview
 export function getWebviewContent() {
-	console.log("Sending Webview...");
+	console.log("SYSTEM: Sending Webview...");
 	return `<!DOCTYPE html>
 	<html lang="en">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Cat Coding</title>
 		<script>
 
 		const vscode = acquireVsCodeApi();
@@ -29,6 +28,9 @@ export function getWebviewContent() {
 	</head>
 	<body>
 		<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
+		<br>
+		<p id="response"> || Stelle's Response Will Go Here! || </p>
+		<br>
 		<form id="userInput" method="POST">
 			<input type="text" id="userText" placeholder="Talk to Stelle here!">
 			<button type="button" onclick="submitUserData()" id="submitUserText"> Submit </button>

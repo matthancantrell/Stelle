@@ -10,7 +10,7 @@ import { Console } from 'console';
 export function activate(context: vscode.ExtensionContext) {
 
 	// Startup Log To Inform Dev That Extension Is Running
-	console.log('Congratulations, your extension "stelle" is now active!');
+	console.log('SYSTEM: Congratulations, your extension "stelle" is now active!');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -31,7 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand(testCommand, commandHandler));
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand('stelle.start', () => {
+		vscode.commands.registerCommand('stelle.start', async () => {
 			// Create & Show New Webview
 			const panel = vscode.window.createWebviewPanel(
 				'stelle', // Identifies type of webview. Internal use.
@@ -43,30 +43,27 @@ export function activate(context: vscode.ExtensionContext) {
 			);
 
 			panel.webview.onDidReceiveMessage(message => {
-				console.log('Message Received...');
+				console.log('SYSTEM: Message Received...');
 				if (message.command === 'submitUserData') {
 					const userData = message.data;
 
-					console.log('Received data from webview:', userData);
-
-					console.log("Before handle");
+					console.log('User:', userData);
 					callOpenAI();
-					console.log("After handle");
 				}
 			});
 
-			panel.webview.html = getWebviewContent();
+			panel.webview.html = await getWebviewContent();
 		})
 	);
 }
 
 export function handleInput(input : string) {
-	console.log('Entering handleInput');
+	console.log('SYSTEM: Entering handleInput');
 	console.log('Stelle: Did you say "' + input + '"?');
-	console.log('Exiting handleInput');
+	console.log('SYSTEM: Exiting handleInput');
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {
-	console.log("Shutting Down...");
+	console.log("SYSTEM: Shutting Down...");
 }
