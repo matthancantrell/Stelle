@@ -1,13 +1,14 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'; // VSCode API Module
+
+import { getWebviewContent } from './webview';
+import { callOpenAI } from './OpenAI_API';
+import { Console } from 'console';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
+	// Startup Log To Inform Dev That Extension Is Running
 	console.log('Congratulations, your extension "stelle" is now active!');
 
 	// The command has been defined in the package.json file
@@ -40,53 +41,31 @@ export function activate(context: vscode.ExtensionContext) {
 				} // Webview options go here
 			);
 
-			panel.webview.onDidReceiveMessage(message => {
+			panel.webview.onDidReceiveMessage(async message => {
 				if (message.command === 'submitUserData') {
 					const userData = message.data;
 
 					console.log('Received data from webview:', userData);
+
+					console.log("Before handle");
+					async function handleUserData() {
+						console.log('starting handleUserData');
+						try {
+							const response = await callOpenAI();
+							console.log("Stelle: " + response);	
+						} catch (error) {
+							console.error(error);
+						}
+					}
+					
+					handleUserData();
+					console.log("After handle");
 				}
 			});
 
 			panel.webview.html = getWebviewContent();
 		})
 	);
-}
-
-function getWebviewContent() {
-	return `<!DOCTYPE html>
-	<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Cat Coding</title>
-		<script>
-	
-			function EmptyText() {
-				var object = document.getElementById('userText');
-				object.value = '';
-			}
-
-			function submitUserData() {
-                var userInput = document.getElementById('userText').value;
-                // Send the user input data back to the extension
-                const vscode = acquireVsCodeApi();
-                vscode.postMessage({
-                    command: 'submitUserData',
-                    data: userInput
-                });
-				EmptyText();
-            }
-		</script>
-	</head>
-	<body>
-		<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
-		<form id="userInput" method="POST">
-			<input type="text" id="userText" placeholder="Talk to Stelle here!">
-			<button type="button" onclick="submitUserData()" id="submitUserText"> Submit </button>
-		<form/>
-	</body>
-	</html>`;
 }
 
 // This method is called when your extension is deactivated
