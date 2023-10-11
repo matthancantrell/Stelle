@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'; // VSCode API Module
 
 import { getWebviewContent } from './webview';
+import * as Stelle from './stelle';
 import { callOpenAI } from './OpenAI_API';
 import { Console } from 'console';
 
@@ -49,6 +50,7 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log('Received data from webview:', userData);
 
 					console.log("Before handle");
+					callOpenAI();
 					console.log("After handle");
 				}
 			});
@@ -58,5 +60,13 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 }
 
+export function handleInput(input : string) {
+	console.log('Entering handleInput');
+	console.log('Stelle: Did you say "' + input + '"?');
+	console.log('Exiting handleInput');
+}
+
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+	console.log("Shutting Down...");
+}
