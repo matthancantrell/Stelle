@@ -1,5 +1,6 @@
 // HTML For Webview
 export function getWebviewContent() {
+	console.log("Sending Webview...");
 	return `<!DOCTYPE html>
 	<html lang="en">
 	<head>
@@ -7,22 +8,23 @@ export function getWebviewContent() {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Cat Coding</title>
 		<script>
-	
-			function EmptyText() {
-				var object = document.getElementById('userText');
-				object.value = '';
-			}
 
-			function submitUserData() {
-                var userInput = document.getElementById('userText').value;
-                // Send the user input data back to the extension
-                const vscode = acquireVsCodeApi();
-                vscode.postMessage({
-                    command: 'submitUserData',
-                    data: userInput
-                });
-				EmptyText();
-            }
+		const vscode = acquireVsCodeApi();
+
+		function EmptyText() {
+			var object = document.getElementById('userText');
+			object.value = '';
+		}
+
+		function submitUserData() {
+            var userInput = document.getElementById('userText').value;
+            // Send the user input data back to the extension
+            vscode.postMessage({
+                command: 'submitUserData',
+                data: userInput
+            });
+			EmptyText();
+        }
 		</script>
 	</head>
 	<body>

@@ -41,24 +41,14 @@ export function activate(context: vscode.ExtensionContext) {
 				} // Webview options go here
 			);
 
-			panel.webview.onDidReceiveMessage(async message => {
+			panel.webview.onDidReceiveMessage(message => {
+				console.log('Message Received...');
 				if (message.command === 'submitUserData') {
 					const userData = message.data;
 
 					console.log('Received data from webview:', userData);
 
 					console.log("Before handle");
-					async function handleUserData() {
-						console.log('starting handleUserData');
-						try {
-							const response = await callOpenAI();
-							console.log("Stelle: " + response);	
-						} catch (error) {
-							console.error(error);
-						}
-					}
-					
-					handleUserData();
 					console.log("After handle");
 				}
 			});
