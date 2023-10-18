@@ -6,6 +6,16 @@ export function getWebviewContent() {
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<style>
+			.box {
+				width: 200px;
+				height: 100px;
+				background-color: #e0e0e0;
+				border: 1px solid #000;
+				padding: 10px;
+				text-align: center;
+			}
+		</style>
 		<script>
 
 		const vscode = acquireVsCodeApi();
@@ -20,6 +30,14 @@ export function getWebviewContent() {
 
 				case 'update':
 					UpdateStelle(message.data.response);
+					var boolStr = message.data.codeProvided;
+					if (boolStr) {
+						UpdateCode(message.data.code);
+					}
+					vscode.postMessage({
+						command: 'beep',
+						data: boolStr
+					});
 					break;
 			}
 		})
@@ -32,6 +50,11 @@ export function getWebviewContent() {
 		function UpdateStelle(data) {
 			var object = document.getElementById('R');
 			if (object) { document.getElementById('R').innerText = data; }
+		}
+
+		function UpdateCode(data) {
+			var object = document.getElementById('code');
+			if (object) { document.getElementById('code').innerText = data; }
 		}
 
 		function submitUserData() {
@@ -52,6 +75,9 @@ export function getWebviewContent() {
 	<body>
 		<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
 		<br>
+		<div class="box">
+			<p id="code"></p>
+		</div>
 		<p id="R">
 			|| Stelle's Response Will Go Here! ||
 		</p>

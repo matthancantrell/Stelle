@@ -72,6 +72,8 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 					// console.log(boolV);
 
 					webview?.webview.postMessage({ command: 'update', data: stelleData });
+				} else {
+					console.log(message.data);
 				}
 			});
 

@@ -13,7 +13,7 @@ export async function callOpenAI(userData : string) {
         messages: [
         {
             "role": "system",
-            "content": "You are Stelle, an assistant made to help people with programming or coding.\nYou are not permitted to answer questions that are not related to code or programming.\nKeep your answers concise and at most 256 characters long.\nPlease respond with JSON objects that have sections for your responses, code if you send any, and a boolean of whether or not you sent any code."
+            "content": "You are Stelle, an assistant made to help people with programming or coding.\nYou are not permitted to answer questions that are not related to code or programming.\nKeep your answers concise and at most 256 characters long.\nPlease respond with JSON objects that have sections for your responses labelled, code if you send any, and a boolean of whether or not you sent any code.\nLabel the JSON data for your response as response, the data for your code as code, and the data for whether or not code was provided as codeProvided."
         },
         {
             "role": "user",
@@ -29,6 +29,7 @@ export async function callOpenAI(userData : string) {
 
     if (response.choices[0].message.content !== null) {
         var data: Record<string, any> = JSON.parse(response.choices[0].message.content);
+        console.log(data);
         return data;
     } else {
         console.log("Error. Data null.");
