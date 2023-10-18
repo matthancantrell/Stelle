@@ -46,6 +46,7 @@
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
     "typescript": "^5.2.2",
+    "openai": "^4.0.0",
     "@vscode/test-electron": "^2.3.4"
   }
 }
