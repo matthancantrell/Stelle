@@ -1,7 +1,4 @@
-// HTML For Webview
-export function getWebviewContent() {
-	console.log("SYSTEM: Sending Webview...");
-	return `<!DOCTYPE html>
+<!DOCTYPE html>
 	<html lang="en">
 	<head>
 		<meta charset="UTF-8">
@@ -30,14 +27,6 @@ export function getWebviewContent() {
 
 				case 'update':
 					UpdateStelle(message.data.response);
-					var boolStr = message.data.codeProvided;
-					if (boolStr) {
-						UpdateCode(message.data.code);
-					}
-					vscode.postMessage({
-						command: 'beep',
-						data: boolStr
-					});
 					break;
 			}
 		})
@@ -50,11 +39,6 @@ export function getWebviewContent() {
 		function UpdateStelle(data) {
 			var object = document.getElementById('R');
 			if (object) { document.getElementById('R').innerText = data; }
-		}
-
-		function UpdateCode(data) {
-			var object = document.getElementById('code');
-			if (object) { document.getElementById('code').innerText = data; }
 		}
 
 		function submitUserData() {
@@ -75,8 +59,8 @@ export function getWebviewContent() {
 	<body>
 		<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
 		<br>
-		<div class="box">
-			<p id="code"></p>
+		<div >
+
 		</div>
 		<p id="R">
 			|| Stelle's Response Will Go Here! ||
@@ -87,5 +71,4 @@ export function getWebviewContent() {
 			<button type="button" onclick="submitUserData()" id="submitUserText"> Submit </button>
 		<form/>
 	</body>
-	</html>`;
-}
+	</html>
