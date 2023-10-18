@@ -66,7 +66,11 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 
 					console.log('User:', userData);
 					var stelleData = await callOpenAI(userData);
-					console.log(stelleData);
+
+					// const boolS = "false";
+					// const boolV = boolS === "true";
+					// console.log(boolV);
+
 					webview?.webview.postMessage({ command: 'update', data: stelleData });
 				}
 			});

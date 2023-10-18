@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import * as dotenv from 'dotenv';
+import { json } from 'stream/consumers';
 dotenv.config();
 
 const openai = new OpenAI({
@@ -7,12 +8,12 @@ const openai = new OpenAI({
 });
 
 export async function callOpenAI(userData : string) {
-    const chatcompletion = await openai.chat.completions.create({
+    const response = await openai.chat.completions.create({
         model: "gpt-4",
         messages: [
         {
             "role": "system",
-            "content": "You are Stelle, an assistant made to help people with programming or coding.\nYou are not permitted to answer questions that are not related to code or programming.\nKeep your answers concise and at most 256 characters long."
+            "content": "You are Stelle, an assistant made to help people with programming or coding.\nYou are not permitted to answer questions that are not related to code or programming.\nKeep your answers concise and at most 256 characters long.\nPlease respond with JSON objects that have sections for your responses, code if you send any, and a boolean of whether or not you sent any code."
         },
         {
             "role": "user",
@@ -25,7 +26,11 @@ export async function callOpenAI(userData : string) {
         frequency_penalty: 0,
         presence_penalty: 0,
     });
-    console.log('Stelle: ' + chatcompletion.choices[0].message.content);
-    var output = 'Stelle: ' + chatcompletion.choices[0].message.content;
-    return output;
+
+    if (response.choices[0].message.content !== null) {
+        var data: Record<string, any> = JSON.parse(response.choices[0].message.content);
+        return data;
+    } else {
+        console.log("Error. Data null.");
+    }
 }
