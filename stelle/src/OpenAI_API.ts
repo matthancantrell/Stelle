@@ -26,5 +26,6 @@ export async function callOpenAI(userData : string) {
         presence_penalty: 0,
     });
     console.log('Stelle: ' + chatcompletion.choices[0].message.content);
-    return 'Stelle: ' + chatcompletion.choices[0].message.content;
+    var output = 'Stelle: ' + chatcompletion.choices[0].message.content;
+    return output;
 }

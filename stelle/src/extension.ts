@@ -59,14 +59,15 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 				);
 			}
 
-			webview.webview.onDidReceiveMessage(message => {
+			webview.webview.onDidReceiveMessage(async message => {
 				console.log('SYSTEM: Message Received...');
 				if (message.command === 'submitUserData') {
 					const userData = message.data;
 
 					console.log('User:', userData);
-					//var stelleData = callOpenAI(userData);
-					webview?.webview.postMessage({ command: 'update', data: userData });
+					var stelleData = await callOpenAI(userData);
+					console.log(stelleData);
+					webview?.webview.postMessage({ command: 'update', data: stelleData });
 				}
 			});
 

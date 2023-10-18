@@ -19,7 +19,7 @@ export function getWebviewContent() {
 					break;
 
 				case 'update':
-					UpdateStelle("Works");
+					UpdateStelle(message.data);
 					break;
 			}
 		})
