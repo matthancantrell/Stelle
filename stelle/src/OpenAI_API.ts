@@ -1,11 +1,12 @@
 import OpenAI from 'openai';
-require('dotenv').config();
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const openai = new OpenAI({
-    apiKey: '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'
+    apiKey: "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"
 });
 
-export async function callOpenAI() {
+export async function callOpenAI(userData : string) {
     const chatcompletion = await openai.chat.completions.create({
         model: "gpt-4",
         messages: [
@@ -15,7 +16,7 @@ export async function callOpenAI() {
         },
         {
             "role": "user",
-            "content": "Who are you?"
+            "content": userData,
         }
         ],
         temperature: 1,
@@ -25,4 +26,5 @@ export async function callOpenAI() {
         presence_penalty: 0,
     });
     console.log('Stelle: ' + chatcompletion.choices[0].message.content);
+    return 'Stelle: ' + chatcompletion.choices[0].message.content;
 }

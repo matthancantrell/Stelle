@@ -10,9 +10,28 @@ export function getWebviewContent() {
 
 		const vscode = acquireVsCodeApi();
 
+		window.addEventListener('message', event => {
+			const message = event.data;
+
+			switch (message.command) {
+				case 'updateStelleHTML':
+					document.getElementById('R').innertext = 'Message Received';
+					break;
+
+				case 'update':
+					UpdateStelle("Works");
+					break;
+			}
+		})
+
 		function EmptyText() {
 			var object = document.getElementById('userText');
 			object.value = '';
+		}
+
+		function UpdateStelle(data) {
+			var object = document.getElementById('R');
+			if (object) { document.getElementById('R').innerText = data; }
 		}
 
 		function submitUserData() {
@@ -24,12 +43,18 @@ export function getWebviewContent() {
             });
 			EmptyText();
         }
+
+		function updateStelle(newData) {
+			document.getElementById('response').innertext = newData;
+		}
 		</script>
 	</head>
 	<body>
 		<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
 		<br>
-		<p id="response"> || Stelle's Response Will Go Here! || </p>
+		<p id="R">
+			|| Stelle's Response Will Go Here! ||
+		</p>
 		<br>
 		<form id="userInput" method="POST">
 			<input type="text" id="userText" placeholder="Talk to Stelle here!">
