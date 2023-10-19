@@ -10,6 +10,7 @@ import { callOpenAI } from './OpenAI_API';
 export function activate(context: vscode.ExtensionContext) { // All Commands Will Be Stored In Here. Will Be Run Upon Start.
 
 	let webview: vscode.WebviewPanel | undefined = undefined;
+	const editor = vscode.window.activeTextEditor;
 
 	// Startup Log To Inform Dev That Extension Is Running
 	console.log('SYSTEM: Congratulations, your extension "stelle" is now active!');
@@ -23,6 +24,20 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Ask Stelle code related questions!');
+
+		if (editor) {
+			const lineNumber = 5;
+			const codeToInsert = 'Hello from Stelle!';
+
+			const insert = new vscode.TextEdit(
+				new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, 0)),
+				codeToInsert
+			);
+
+			const edit = new vscode.WorkspaceEdit();
+			edit.set(editor.document.uri, [insert]);
+			vscode.workspace.applyEdit(edit);
+		}
 	});
 	context.subscriptions.push(disposable);
 	//#endregion
@@ -66,10 +81,6 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 
 					console.log('User:', userData);
 					var stelleData = await callOpenAI(userData);
-
-					// const boolS = "false";
-					// const boolV = boolS === "true";
-					// console.log(boolV);
 
 					webview?.webview.postMessage({ command: 'update', data: stelleData });
 				} else {
