@@ -24,20 +24,6 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Ask Stelle code related questions!');
-
-		if (editor) {
-			const lineNumber = 5;
-			const codeToInsert = 'Hello from Stelle!';
-
-			const insert = new vscode.TextEdit(
-				new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, 0)),
-				codeToInsert
-			);
-
-			const edit = new vscode.WorkspaceEdit();
-			edit.set(editor.document.uri, [insert]);
-			vscode.workspace.applyEdit(edit);
-		}
 	});
 	context.subscriptions.push(disposable);
 	//#endregion
@@ -83,6 +69,24 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 					var stelleData = await callOpenAI(userData);
 
 					webview?.webview.postMessage({ command: 'update', data: stelleData });
+					
+					if (editor) {
+						const lineNumber = 5;
+						var codeToInsert;
+						if (stelleData) {
+							codeToInsert = stelleData["code"];
+						}
+						//const codeToInsert = 'Hello from Stelle!';
+
+						const insert = new vscode.TextEdit(
+							new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, 0)),
+							codeToInsert
+						);
+
+						const edit = new vscode.WorkspaceEdit();
+						edit.set(editor.document.uri, [insert]);
+						vscode.workspace.applyEdit(edit);
+					}
 				} else {
 					console.log(message.data);
 				}
