@@ -41,8 +41,6 @@ export function getWebviewContent() {
 			width: 90%
 		}
 
-		.large-button { padding: 20px; }
-
 		.centered {
 			text-align: center;
 			display: block;
@@ -142,7 +140,7 @@ export function getWebviewContent() {
 		<form id="userInput" method="POST">
 			<textarea type="text" id="userText" class="non-resizeable centered product-font" placeholder="Talk to Stelle here!" oninput="autoResize(this)" style="font-size: 2em;"></textarea>
 			<br>
-			<button type="button" onclick="submitUserData()" id="submitUserText" class="centered">Submit</button>
+			<button type="button" onclick="submitUserData()" id="submitUserText" class="centered" style="padding: 20px;">Submit</button>
 		</form>	
 	</body>
 	</html>`;
