@@ -73,6 +73,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 					webview?.webview.postMessage({ command: 'update', data: stelleData });
 					
 					if (editor) {
+						
 						// const lineNumber = 5;
 						// var codeToInsert;
 						// if (stelleData) {
@@ -88,6 +89,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 						// const edit = new vscode.WorkspaceEdit();
 						// edit.set(editor.document.uri, [insert]);
 						// vscode.workspace.applyEdit(edit);
+
 						if (stelleData) {
 							textEditor.insertCodeAtCurrentLocation(stelleData["code"], editor);
 						}
