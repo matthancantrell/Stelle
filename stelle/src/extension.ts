@@ -3,6 +3,8 @@ import * as vscode from 'vscode'; // VSCode API Module
 import { getWebviewContent } from './webview';
 import * as Stelle from './stelle';
 import { callOpenAI } from './OpenAI_API';
+import * as textEditor from './textEditor';
+import { escape } from 'querystring';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -71,21 +73,24 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 					webview?.webview.postMessage({ command: 'update', data: stelleData });
 					
 					if (editor) {
-						const lineNumber = 5;
-						var codeToInsert;
+						// const lineNumber = 5;
+						// var codeToInsert;
+						// if (stelleData) {
+						// 	codeToInsert = stelleData["code"];
+						// }
+						// //const codeToInsert = 'Hello from Stelle!';
+
+						// const insert = new vscode.TextEdit(
+						// 	new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, 0)),
+						// 	codeToInsert
+						// );
+
+						// const edit = new vscode.WorkspaceEdit();
+						// edit.set(editor.document.uri, [insert]);
+						// vscode.workspace.applyEdit(edit);
 						if (stelleData) {
-							codeToInsert = stelleData["code"];
+							textEditor.insertCodeAtCurrentLocation(stelleData["code"], editor);
 						}
-						//const codeToInsert = 'Hello from Stelle!';
-
-						const insert = new vscode.TextEdit(
-							new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, 0)),
-							codeToInsert
-						);
-
-						const edit = new vscode.WorkspaceEdit();
-						edit.set(editor.document.uri, [insert]);
-						vscode.workspace.applyEdit(edit);
 					}
 				} else {
 					console.log(message.data);

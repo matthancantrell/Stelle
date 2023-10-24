@@ -7,14 +7,28 @@ export function getWebviewContent() {
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<style>
-			.box {
-				width: 200px;
-				height: 100px;
-				background-color: #e0e0e0;
-				border: 1px solid #000;
-				padding: 10px;
-				text-align: center;
-			}
+
+		/* Define a CSS class to add a border */
+		.bordered {
+			border: 2px solid black; /* You can customize the border style, color, and width */
+			padding: 10px; /* Add padding for spacing */
+		}
+		
+		.product-font {
+			font-family: 'Product Sans';
+			//src: url('ProductSans-Regular.otf');
+		}
+			
+		body {
+			font-family: 'Product Sans';
+		}
+
+		.large-text {
+			font-size: 2em;
+		}
+
+		.center-text { text-align: center; }
+
 		</style>
 		<script>
 
@@ -33,6 +47,8 @@ export function getWebviewContent() {
 					var boolStr = message.data.codeProvided;
 					if (boolStr) {
 						UpdateCode(message.data.code);
+					} else {
+						CheckIfCodeIsEmpty();
 					}
 					vscode.postMessage({
 						command: 'beep',
@@ -45,6 +61,15 @@ export function getWebviewContent() {
 		function EmptyText() {
 			var object = document.getElementById('userText');
 			object.value = '';
+		}
+
+		function CheckIfCodeIsEmpty() {
+			var object = document.getElementById('code');
+			if(object.innerText.trim() === '') {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		function UpdateStelle(data) {
@@ -75,11 +100,11 @@ export function getWebviewContent() {
 	<body>
 		<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
 		<br>
-		<div class="box">
+		<div class="bordered">
 			<p id="code"></p>
 		</div>
 		<p id="R">
-			|| Stelle's Response Will Go Here! ||
+			Hello! I am Stelle, an AI assistant built to help you learn to code! Ask me any code related questions and I will do my best to help!
 		</p>
 		<br>
 		<form id="userInput" method="POST">
