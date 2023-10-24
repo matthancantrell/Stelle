@@ -16,7 +16,7 @@ export function getWebviewContent() {
 		
 		.product-font {
 			font-family: 'Product Sans';
-			//src: url('ProductSans-Regular.otf');
+			<!-- src: url('ProductSans-Regular.otf'); -->
 		}
 			
 		body {
