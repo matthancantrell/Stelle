@@ -19,16 +19,26 @@ export function getWebviewContent() {
 			<!-- src: url('ProductSans-Regular.otf'); -->
 		}
 			
-		body {
+		/* body {
 			font-family: 'Product Sans';
-		}
+		} */
 
 		.large-text {
 			font-size: 2em;
 		}
 
-		.center-text { text-align: center; }
+		.non-resizeable {
+			resize: none;
+			width: 90%
+		}
 
+		.centered {
+			text-align: center;
+			display: block;
+			margin: 0 auto; /* Center the element horizontally on the page */
+		}
+
+		.center-text { text-align: center; }
 		</style>
 		<script>
 
@@ -95,22 +105,28 @@ export function getWebviewContent() {
 		function updateStelle(newData) {
 			document.getElementById('response').innertext = newData;
 		}
+
+		function autoResize(textArea) {
+			textArea.style.height = 'auto'; // Reset the height to auto
+			textArea.style.height = (textArea.scrollHeight) + 'px'; // Set the height to fit the content
+		}
+		
 		</script>
 	</head>
 	<body>
-		<img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
+		<!-- <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" /> -->
 		<br>
 		<div class="bordered">
 			<p id="code"></p>
 		</div>
-		<p id="R">
+		<p id="R" class="product-font centered">
 			Hello! I am Stelle, an AI assistant built to help you learn to code! Ask me any code related questions and I will do my best to help!
 		</p>
 		<br>
 		<form id="userInput" method="POST">
-			<input type="text" id="userText" placeholder="Talk to Stelle here!">
-			<button type="button" onclick="submitUserData()" id="submitUserText"> Submit </button>
-		<form/>
+			<textarea type="text" id="userText" class="non-resizeable centered" placeholder="Talk to Stelle here!" oninput="autoResize(this)"></textarea>
+			<button type="button" onclick="submitUserData()" id="submitUserText" class="centered">Submit</button>
+		</form>	
 	</body>
 	</html>`;
 }
