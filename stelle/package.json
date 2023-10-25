@@ -13,6 +13,15 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "menus": {
+      "editor/context": [
+        {
+          "command": "stelle.rightClickCommand",
+          "when": "editorHasSelection",
+          "group": "extension"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "stelle.helloWorld",
@@ -25,6 +34,10 @@
       {
         "command": "stelle.start",
         "title": "Start coding with Stelle!"
+      },
+      {
+        "command": "stelle.rightClickCommand",
+        "title": "Stelle's First Context Menu"
       }
     ]
   },

@@ -29,6 +29,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	});
 	context.subscriptions.push(disposable);
 	//#endregion
+
 	//#region stelle.testCommand
 	const testCommand = 'stelle.testCommand';
 	const commandHandler = (name: string = 'Stelle') => {
@@ -36,6 +37,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	};
 	context.subscriptions.push(vscode.commands.registerCommand(testCommand, commandHandler));
 	//#endregion
+
 	//#region stelle.start
 	context.subscriptions.push(
 		vscode.commands.registerCommand('stelle.start', async () => {
@@ -103,6 +105,19 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 		})
 	);
 	//#endregion
+
+	vscode.window.onDidChangeTextEditorSelection((e) => {
+        if (e.textEditor) {
+            const isTextSelected = !e.textEditor.selection.isEmpty;
+            vscode.commands.executeCommand('setContext', 'showContextMenu', isTextSelected);
+        }
+    });
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('stelle.rightClickCommand', () => {
+            vscode.window.showInformationMessage('My Right-Click Command was executed!');
+        })
+    );
 }
 
 // This method is called when your extension is deactivated
