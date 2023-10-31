@@ -114,8 +114,9 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
     });
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('stelle.rightClickCommand', () => {
+        vscode.commands.registerCommand('stelle.rightClickCommand', async () => {
             vscode.window.showInformationMessage('My Right-Click Command was executed!');
+			vscode.commands.executeCommand('stelle.Start');
         })
     );
 }
