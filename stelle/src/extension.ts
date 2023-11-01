@@ -119,6 +119,23 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 			vscode.commands.executeCommand('stelle.Start');
         })
     );
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand('stelle.analyze', () => {
+			console.log("'stelle.analyze' starting...");
+			if (editor) {
+				const selectedText = editor.document.getText(editor.selection);
+
+				if (selectedText) {
+					console.log("Selected Text:\n", selectedText);
+				} else {
+					vscode.window.showInformationMessage('No code is selected.');
+				}
+			} else {
+				vscode.window.showInformationMessage('No text editor is active.');
+			}
+			console.log("'stelle.analyze' ending...");
+		}));
 }
 
 // This method is called when your extension is deactivated

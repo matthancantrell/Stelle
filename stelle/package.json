@@ -28,7 +28,13 @@
         ],
         "stelle.stelleGroup": [
           {
-            "command": "stelle.helloWorld"
+            "command": "stelle.analyze"
+          },
+          {
+            "command": "stelle.optimize"
+          },
+          {
+            "command": "stelle.fix"
           }
         ]
     },
@@ -36,6 +42,18 @@
       {
         "command": "stelle.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "stelle.analyze",
+        "title": "Analyze This Code"
+      },
+      {
+        "command": "stelle.optimize",
+        "title": "Optimize This Code"
+      },
+      {
+        "command": "stelle.fix",
+        "title": "Fix This Code"
       },
       {
         "command": "stelle.testCommand",
