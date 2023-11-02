@@ -2,7 +2,7 @@ import * as vscode from 'vscode'; // VSCode API Module
 
 import { getWebviewContent } from './webview';
 import * as Stelle from './stelle';
-import { callOpenAI } from './OpenAI_API';
+import { callOpenAI, Analyze, Optimize } from './OpenAI_API';
 import * as textEditor from './textEditor';
 import { escape } from 'querystring';
 
@@ -120,21 +120,84 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
         })
     );
 
+//#region stelle.analyze
 	context.subscriptions.push(
-		vscode.commands.registerCommand('stelle.analyze', () => {
+		vscode.commands.registerCommand('stelle.analyze', async () => {
 			console.log("'stelle.analyze' starting...");
+			if (!editor) {
+				vscode.window.showInformationMessage('No text editor is active.');
+				console.log("'stelle.analyze' ending...");
+				return;
+			}
+
+			const selectedText = editor.document.getText(editor.selection);
+			if (!selectedText) {
+				vscode.window.showInformationMessage('No code is selected.');
+				console.log("'stelle.analyze' ending...");
+				return;
+			}
+
+			console.log("Successfully grabbed text from editor. Passing To API...");
+			vscode.window.withProgress({
+				location: vscode.ProgressLocation.Notification,
+				title: 'Stelle has begun to analyze your code!',
+				cancellable: false,
+			}, async (progress) => {
+				try {
+					const response = await Analyze(selectedText);
+					if (response) {
+						console.log(response);
+						const json = JSON.parse(response);
+						console.log(json);
+						const explanation = json.response;
+						if (explanation) {
+							console.log("Explanation parsed from json...");
+						}
+						const code = json.code;
+						if (code) {
+							console.log("Code parsed from json...");
+						}
+
+						editor.edit((editBuilder) => {
+							editBuilder.replace(editor.selection, code);
+							vscode.window.showInformationMessage("Stelle has analyzed your code!");
+						});
+						console.log("'stelle.analyze' ending...");
+						return Promise.resolve();
+					}
+				} catch (error: any) {
+					console.error(error); // Log the error for debugging
+					vscode.window.showErrorMessage(`An error has occurred: ${error.message}`);
+					console.log("'stelle.analyze' ending...");
+					return Promise.reject(error);
+				}
+			});
+		}));
+		//#endregion
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand('stelle.optimize', async () => {
+			console.log("'stelle.optimize' starting...");
 			if (editor) {
 				const selectedText = editor.document.getText(editor.selection);
-
 				if (selectedText) {
-					console.log("Selected Text:\n", selectedText);
-				} else {
-					vscode.window.showInformationMessage('No code is selected.');
+					const response = await Optimize(selectedText);
+					if (response) {
+						console.log(response);
+						const explanation = response.response;
+						console.log("Explanation parsed from json...");
+						const code = response.code;
+						console.log("Code parsed from response...");
+
+						if (explanation && code) { console.log("Response parsed..."); }
+
+						editor.edit((editBuilder) => {
+							editBuilder.replace(editor.selection, code);
+						});
+					}
 				}
-			} else {
-				vscode.window.showInformationMessage('No text editor is active.');
 			}
-			console.log("'stelle.analyze' ending...");
+			console.log("'stelle.optimize' ending...");
 		}));
 }
 

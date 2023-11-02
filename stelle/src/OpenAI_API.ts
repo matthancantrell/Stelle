@@ -44,7 +44,7 @@ export async function callOpenAI(userData : string) {
     }
 }
 
-async function analyze(userData: string) {
+export async function Analyze(userData: string) {
     try {
         const response = await openai.chat.completions.create({
             model: "gpt-4",
@@ -55,7 +55,40 @@ async function analyze(userData: string) {
             },
             {
                 "role": "system",
-                "content": "Analyze the code provided and explain it simply to the user. Be sure to keep your answers concise and 256 characters maximum. You will return a JSON object with the structure of 'response' and 'code'. Response will have your explanation for the user to read and understand. Code will be the code they submitted with comments explaining what the code does. If the code has errors, do not fix them. Point the errors out in your explanation and code comments."
+                "content": "Analyze the code provided and explain it simply to the user. If there is no implementation, use context to explain what the code should do and how to achieve this. Be sure to keep your answers concise and 256 characters maximum. You will return a JSON object with the structure of 'response' and 'code'. Response will have your explanation for the user to read and understand. Code will be the code they submitted with comments explaining what the code does. If the code has errors, do not fix them. Point the errors out in your explanation and code comments. Maintain formatting of the data when you send it back to ensure clarity and understanding. This includes indention, spacing, etc."
+            }
+            ],
+            temperature: 1,
+            max_tokens: 1000,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+        });
+    
+        if (response.choices[0].message.content !== null) {
+            var data = response.choices[0].message.content;
+            return data;
+        } else {
+            console.log("Error. Data null.");
+        }
+    } catch (error) {
+        console.error("An error occurred while calling the OpenAI API: ", error);
+        throw error;
+    }
+}
+
+export async function Optimize(userData : string) {
+    try {
+        const response = await openai.chat.completions.create({
+            model: "gpt-4",
+            messages: [
+            {
+                "role": "user",
+                "content": userData,
+            },
+            {
+                "role": "system",
+                "content": "Analyze the code provided and optimize it for the user. Make sure to explain what you're doing and why through an explanation and code comments. Be sure to keep your answers concise and 256 characters maximum. You will return a JSON object with the structure of 'response' and 'code'. Response will have your explanation for the user to read and understand. Code will be the code they submitted with comments explaining what the code does. If the code has errors, do not fix them. Point the errors out in your explanation and code comments. Maintain formatting of the data when you send it back to ensure clarity and understanding. This includes indention, spacing, etc."
             }
             ],
             temperature: 1,
@@ -67,7 +100,6 @@ async function analyze(userData: string) {
     
         if (response.choices[0].message.content !== null) {
             var data: Record<string, any> = JSON.parse(response.choices[0].message.content);
-            console.log(data);
             return data;
         } else {
             console.log("Error. Data null.");
