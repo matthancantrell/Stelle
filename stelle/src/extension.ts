@@ -4,7 +4,6 @@ import { getWebviewContent } from './webview';
 import * as Stelle from './stelle';
 import { callOpenAI, Analyze, Optimize } from './OpenAI_API';
 import * as textEditor from './textEditor';
-import { escape } from 'querystring';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -16,27 +15,6 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 
 	// Startup Log To Inform Dev That Extension Is Running
 	console.log('SYSTEM: Congratulations, your extension "stelle" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-
-	//#region stelle.helloWorld
-	let disposable = vscode.commands.registerCommand('stelle.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Ask Stelle code related questions!');
-	});
-	context.subscriptions.push(disposable);
-	//#endregion
-
-	//#region stelle.testCommand
-	const testCommand = 'stelle.testCommand';
-	const commandHandler = (name: string = 'Stelle') => {
-		console.log(`Hello ${name}!!!`);
-	};
-	context.subscriptions.push(vscode.commands.registerCommand(testCommand, commandHandler));
-	//#endregion
 
 	//#region stelle.start
 	context.subscriptions.push(
@@ -106,45 +84,32 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	);
 	//#endregion
 
-	vscode.window.onDidChangeTextEditorSelection((e) => {
-        if (e.textEditor) {
-            const isTextSelected = !e.textEditor.selection.isEmpty;
-            vscode.commands.executeCommand('setContext', 'showContextMenu', isTextSelected);
-        }
-    });
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand('stelle.rightClickCommand', async () => {
-            vscode.window.showInformationMessage('My Right-Click Command was executed!');
-			vscode.commands.executeCommand('stelle.Start');
-        })
-    );
-
-//#region stelle.analyze
+//	#region stelle.analyze
 	context.subscriptions.push(
 		vscode.commands.registerCommand('stelle.analyze', async () => {
-			console.log("'stelle.analyze' starting...");
-			if (!editor) {
-				vscode.window.showInformationMessage('No text editor is active.');
-				console.log("'stelle.analyze' ending...");
-				return;
+
+			console.log("'stelle.analyze' starting..."); // Inform Dev That 'stelle.analyze' Has Started
+			if (!editor) { // If The 'editor' Variable Is NOT Set
+				vscode.window.showInformationMessage('No text editor is active.'); // Inform The User That There Is No Editor Active
+				console.log("'stelle.analyze' ending..."); // Inform Dev That 'stelle.analyze' Has Ended
+				return; // End The Function
 			}
 
-			const selectedText = editor.document.getText(editor.selection);
-			if (!selectedText) {
-				vscode.window.showInformationMessage('No code is selected.');
-				console.log("'stelle.analyze' ending...");
-				return;
+			const selectedText = editor.document.getText(editor.selection); // Select Text From Whatever The User Has Highlighted
+			if (!selectedText) { // If There Is No Selected Text
+				vscode.window.showInformationMessage('No code is selected.'); // Inform The User That There Is No Selected Text / Code
+				console.log("'stelle.analyze' ending..."); // Inform Dev That 'stelle.analyze' Has Ended
+				return; // End The Function
 			}
 
-			console.log("Successfully grabbed text from editor. Passing To API...");
-			vscode.window.withProgress({
-				location: vscode.ProgressLocation.Notification,
-				title: 'Stelle has begun to analyze your code!',
-				cancellable: false,
-			}, async (progress) => {
+			console.log("Successfully grabbed text from editor. Passing To API..."); // Inform The User That The Text Was Successfully Received
+			vscode.window.withProgress({ // This Function Will Begin The Progress Bar
+				location: vscode.ProgressLocation.Notification, // Make It A Notification
+				title: 'Stelle has begun to analyze your code!', // This Title Will Be What The User Sees
+				cancellable: false, // The User Cannot Cancel This Notification
+			}, async (progress) => { // Progress Will Be Used Based On The Async Promise
 				try {
-					const response = await Analyze(selectedText);
+					const response = await Analyze(selectedText); // 
 					if (response) {
 						console.log(response);
 						const json = JSON.parse(response);
@@ -173,7 +138,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 				}
 			});
 		}));
-		//#endregion
+//	#endregion
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('stelle.optimize', async () => {
