@@ -20,9 +20,8 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	context.subscriptions.push(
 		vscode.commands.registerCommand('stelle.start', async () => {
 
-			if (webview) {
-				webview.reveal(vscode.ViewColumn.Two);
-			} else {
+			if (webview) { webview.reveal(vscode.ViewColumn.Two); } 
+			else {
 				// Create & Show New Webview
 				webview = vscode.window.createWebviewPanel(
 					'stelle', // Identifies type of webview. Internal use.
@@ -33,10 +32,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 					} // Webview options go here
 				);
 				webview.webview.html = await getWebviewContent();
-				webview.onDidDispose(
-					() => {
-						webview = undefined;
-					},
+				webview.onDidDispose(() => { webview = undefined; },
 					undefined,
 					context.subscriptions
 				);
@@ -46,39 +42,16 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 				console.log('SYSTEM: Message Received...');
 				if (message.command === 'submitUserData') {
 					const userData = message.data;
-
 					console.log('User:', userData);
 					var stelleData = await callOpenAI(userData);
 
 					webview?.webview.postMessage({ command: 'update', data: stelleData });
 					
 					if (editor) {
-						
-						// const lineNumber = 5;
-						// var codeToInsert;
-						// if (stelleData) {
-						// 	codeToInsert = stelleData["code"];
-						// }
-						// //const codeToInsert = 'Hello from Stelle!';
-
-						// const insert = new vscode.TextEdit(
-						// 	new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber, 0)),
-						// 	codeToInsert
-						// );
-
-						// const edit = new vscode.WorkspaceEdit();
-						// edit.set(editor.document.uri, [insert]);
-						// vscode.workspace.applyEdit(edit);
-
-						if (stelleData) {
-							textEditor.insertCodeAtCurrentLocation(stelleData["code"], editor);
-						}
+						if (stelleData) { textEditor.insertCodeAtCurrentLocation(stelleData["code"], editor); }
 					}
-				} else {
-					console.log(message.data);
-				}
+				} else { console.log(message.data); }
 			});
-
 			webview.webview.postMessage({ command: 'updateStelleHTML' });
 		})
 	);
@@ -90,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 
 			console.log("'stelle.analyze' starting..."); // Inform Dev That 'stelle.analyze' Has Started
 			if (!editor) { // If The 'editor' Variable Is NOT Set
-				vscode.window.showInformationMessage('No text editor is active.'); // Inform The User That There Is No Editor Active
+				vscode.window.showWarningMessage('No text editor is active.'); // Inform The User That There Is No Editor Active
 				console.log("'stelle.analyze' ending..."); // Inform Dev That 'stelle.analyze' Has Ended
 				return; // End The Function
 			}
