@@ -1,9 +1,10 @@
 {
   "name": "stelle",
   "displayName": "Stelle",
-  "description": "",
-  "version": "0.0.1",
-  "publisher": "Matthan Cantrell",
+  "description": "An AI Powered Asisstant To Help You Program!",
+  "keywords": ["Stelle", "AI Asisstant", "Programming", "Teacher"],
+  "version": "1.0.0",
+  "publisher": "MatthanCantrell",
   "engines": {
     "vscode": "^1.83.0"
   },
@@ -89,8 +90,5 @@
     "mocha": "^10.2.0",
     "openai": "^4.14.2",
     "typescript": "^5.2.2"
-  },
-  "dependencies": {
-    "dotenv": "^16.3.1"
   }
 }

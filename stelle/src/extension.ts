@@ -48,6 +48,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 					webview?.webview.postMessage({ command: 'update', data: stelleData });
 					
 					if (editor) {
+						console.log("Editor is valid");
 						if (stelleData) { textEditor.insertCodeAtCurrentLocation(stelleData["code"], editor); }
 					}
 				} else { console.log(message.data); }
@@ -84,7 +85,6 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 				try {
 					const response = await Analyze(selectedText); // 
 					if (response) {
-						console.log(response);
 						const json = JSON.parse(response);
 						console.log(json);
 						const explanation = json.response;
