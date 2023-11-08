@@ -41,10 +41,6 @@
     },
     "commands": [
       {
-        "command": "stelle.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "stelle.analyze",
         "title": "Analyze This Code"
       },
@@ -57,16 +53,8 @@
         "title": "Fix This Code"
       },
       {
-        "command": "stelle.testCommand",
-        "title": "Test Command"
-      },
-      {
         "command": "stelle.start",
         "title": "Start coding with Stelle!"
-      },
-      {
-        "command": "stelle.rightClickCommand",
-        "title": "Stelle's First Context Menu"
       }
     ]
   },

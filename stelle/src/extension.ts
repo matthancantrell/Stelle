@@ -69,47 +69,63 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 				return; // End The Function
 			}
 
-			const selectedText = editor.document.getText(editor.selection); // Select Text From Whatever The User Has Highlighted
+			var selectedText = editor.document.getText(editor.selection); // Select Text From Whatever The User Has Highlighted
 			if (!selectedText) { // If There Is No Selected Text
-				vscode.window.showInformationMessage('No code is selected.'); // Inform The User That There Is No Selected Text / Code
-				console.log("'stelle.analyze' ending..."); // Inform Dev That 'stelle.analyze' Has Ended
-				return; // End The Function
+				console.log('No code provided. Asking User To Provide File...');
+				const choice = await vscode.window.showInformationMessage('No code is selected. Would you like to analyze the entire file?',
+				'Yes',
+				'No'
+				);
+
+				if (choice === 'Yes') { // If the User Wants To Provide Entire File...
+					console.log('Grabbing all code from page...'); // Inform Dev That All Code Is Being Grabbed From Page
+					await vscode.commands.executeCommand("editor.action.selectAll"); // This Await Ensures The Code Waits Until The Selection Is Complete Before Proceeding
+					selectedText = editor.document.getText(editor.selection); // Update 'selectedText' With Entire File
+				} else { // If The User Does Not Provide Any Code
+					vscode.window.showErrorMessage('Stelle is unable to analyze without code provided. Please try again.'); // Inform The User That The Code Cannot Be Analyzed
+					console.log("'stelle.analyze' ending..."); // Inform Dev That 'stelle.analyze' Has Ended
+					return; // End The Function
+				}
 			}
 
-			console.log("Successfully grabbed text from editor. Passing To API..."); // Inform The User That The Text Was Successfully Received
-			vscode.window.withProgress({ // This Function Will Begin The Progress Bar
-				location: vscode.ProgressLocation.Notification, // Make It A Notification
-				title: 'Stelle has begun to analyze your code!', // This Title Will Be What The User Sees
-				cancellable: false, // The User Cannot Cancel This Notification
-			}, async (progress) => { // Progress Will Be Used Based On The Async Promise
-				try {
-					const response = await Analyze(selectedText); // 
-					if (response) {
-						const json = JSON.parse(response);
-						console.log(json);
-						const explanation = json.response;
-						if (explanation) {
-							console.log("Explanation parsed from json...");
+			if (selectedText) {
+				console.log("Successfully grabbed text from editor. Passing To API..."); // Inform The User That The Text Was Successfully Received
+				vscode.window.withProgress({ // This Function Will Begin The Progress Bar
+					location: vscode.ProgressLocation.Notification, // Make It A Notification
+					title: 'Stelle has begun to analyze your code!', // This Title Will Be What The User Sees
+					cancellable: false, // The User Cannot Cancel This Notification
+				}, async (progress) => { // Progress Will Be Used Based On The Async Promise
+					try {
+						const response = await Analyze(selectedText); // 
+						if (response) {
+							const json = JSON.parse(response);
+							const explanation = json.response;
+							if (explanation) {
+								console.log("Explanation parsed from json...");
+								console.log(explanation);
+							}
+							const code = json.code;
+							if (code) {
+								console.log("Code parsed from json...");
+							}
+	
+							editor.edit((editBuilder) => {
+								editBuilder.replace(editor.selection, code);
+								vscode.window.showInformationMessage("Stelle has analyzed your code!");
+							});
+							console.log("'stelle.analyze' ending...");
+							return Promise.resolve();
 						}
-						const code = json.code;
-						if (code) {
-							console.log("Code parsed from json...");
-						}
-
-						editor.edit((editBuilder) => {
-							editBuilder.replace(editor.selection, code);
-							vscode.window.showInformationMessage("Stelle has analyzed your code!");
-						});
+					} catch (error: any) {
+						console.error(error); // Log the error for debugging
+						vscode.window.showErrorMessage(`An error has occurred: ${error.message}`);
 						console.log("'stelle.analyze' ending...");
-						return Promise.resolve();
+						return Promise.reject(error);
 					}
-				} catch (error: any) {
-					console.error(error); // Log the error for debugging
-					vscode.window.showErrorMessage(`An error has occurred: ${error.message}`);
-					console.log("'stelle.analyze' ending...");
-					return Promise.reject(error);
-				}
-			});
+				});	
+			} else {
+				vscode.window.showErrorMessage('Unable to analyze without code provided. Please try again.');
+			}
 		}));
 //	#endregion
 

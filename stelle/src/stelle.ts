@@ -1,5 +1,3 @@
-export function handleInput(input : string) {
-	console.log('Entering handleInput');
-	console.log('Stelle: Did you say "' + input + '"?');
-	console.log('Exiting handleInput');
-}
+import * as OpenAI_API from './OpenAI_API';
+
+// Integration of both API's should go in this file.

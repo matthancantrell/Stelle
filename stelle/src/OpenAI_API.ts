@@ -75,16 +75,18 @@ export async function callOpenAIStreaming(userData : string) {
 
 export async function Analyze(userData: string) {
     try {
+        console.log(`User Data: ${userData}`);
+
         const response = await openai.chat.completions.create({
             model: "gpt-4",
             messages: [
             {
-                "role": "user",
-                "content": userData,
+                "role": "system",
+                "content": "Analyze the code provided and explain it simply to the user.\nGive feedback on the function as well.\nIf there is no implementation, use context to explain what the code should do and how to achieve this.\nIf there is not enough context, inform the user of this.\nIf the code has errors, do not fix them. Point the errors out in your explanation and code comments.\nBe sure to keep your answers concise and 256 characters maximum.\nYou will return a JSON object with the structure of 'response' and 'code'.\nResponse will have your explanation for the user to read and understand.\nCode will be the code they submitted with comments explaining what the code does.\nMaintain formatting of the data when you send it back to ensure clarity and understanding.\nThis includes indention, spacing, etc.\nEven if you are unable to provide feedback to the user, all of your responses must be in the provided JSON format."
             },
             {
-                "role": "system",
-                "content": "Analyze the code provided and explain it simply to the user. If there is no implementation, use context to explain what the code should do and how to achieve this. Be sure to keep your answers concise and 256 characters maximum. You will return a JSON object with the structure of 'response' and 'code'. Response will have your explanation for the user to read and understand. Code will be the code they submitted with comments explaining what the code does. If the code has errors, do not fix them. Point the errors out in your explanation and code comments. Maintain formatting of the data when you send it back to ensure clarity and understanding. This includes indention, spacing, etc."
+                "role": "user",
+                "content": userData,
             }
             ],
             temperature: 1,
