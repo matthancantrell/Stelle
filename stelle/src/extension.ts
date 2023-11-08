@@ -63,6 +63,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 		vscode.commands.registerCommand('stelle.analyze', async () => {
 
 			console.log("'stelle.analyze' starting..."); // Inform Dev That 'stelle.analyze' Has Started
+
 			if (!editor) { // If The 'editor' Variable Is NOT Set
 				vscode.window.showWarningMessage('No text editor is active.'); // Inform The User That There Is No Editor Active
 				console.log("'stelle.analyze' ending..."); // Inform Dev That 'stelle.analyze' Has Ended
@@ -89,20 +90,18 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 			}
 
 			if (selectedText) {
-				console.log("Successfully grabbed text from editor. Passing To API..."); // Inform The User That The Text Was Successfully Received
+				console.log("Successfully captured data from editor. Passing To API..."); // Inform The User That The Text Was Successfully Received
 				vscode.window.withProgress({ // This Function Will Begin The Progress Bar
 					location: vscode.ProgressLocation.Notification, // Make It A Notification
 					title: 'Stelle has begun to analyze your code!', // This Title Will Be What The User Sees
 					cancellable: false, // The User Cannot Cancel This Notification
 				}, async (progress) => { // Progress Will Be Used Based On The Async Promise
 					try {
-						const response = await Analyze(selectedText); // 
-						if (response) {
-							const json = JSON.parse(response);
+						const json = await Analyze(selectedText); // 
+						if (json) {
 							const explanation = json.response;
 							if (explanation) {
 								console.log("Explanation parsed from json...");
-								console.log(explanation);
 							}
 							const code = json.code;
 							if (code) {
@@ -129,30 +128,79 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 		}));
 //	#endregion
 
+//	#region stelle.optimize 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('stelle.optimize', async () => {
+			
 			console.log("'stelle.optimize' starting...");
-			if (editor) {
-				const selectedText = editor.document.getText(editor.selection);
-				if (selectedText) {
-					const response = await Optimize(selectedText);
-					if (response) {
-						console.log(response);
-						const explanation = response.response;
-						console.log("Explanation parsed from json...");
-						const code = response.code;
-						console.log("Code parsed from response...");
 
-						if (explanation && code) { console.log("Response parsed..."); }
+			if (!editor) { // If The 'editor' Variable Is NOT Set
+				vscode.window.showWarningMessage('No text editor is active.'); // Inform The User That There Is No Editor Active
+				console.log("'stelle.optimize' ending because no active editor..."); // Inform Dev That 'stelle.analyze' Has Ended
+				return; // End The Function
+			}
 
-						editor.edit((editBuilder) => {
-							editBuilder.replace(editor.selection, code);
-						});
-					}
+			var selectedText = editor.document.getText(editor.selection); // Select Text From Whatever The User Has Highlighted
+			if (!selectedText) { // If There Is No Selected Text
+				console.log('No code provided. Asking User To Provide File...');
+				const choice = await vscode.window.showInformationMessage('No code is selected. Would you like to optimize the entire file?',
+				'Yes',
+				'No'
+				);
+
+				if (choice === 'Yes') { // If the User Wants To Provide Entire File...
+					console.log('Grabbing all code from page...'); // Inform Dev That All Code Is Being Grabbed From Page
+					await vscode.commands.executeCommand("editor.action.selectAll"); // This Await Ensures The Code Waits Until The Selection Is Complete Before Proceeding
+					selectedText = editor.document.getText(editor.selection); // Update 'selectedText' With Entire File
+				} else { // If The User Does Not Provide Any Code
+					vscode.window.showErrorMessage('Stelle is unable to analyze without code provided. Please try again.'); // Inform The User That The Code Cannot Be Analyzed
+					console.log("'stelle.optimize' ending because no provided code..."); // Inform Dev That 'stelle.analyze' Has Ended
+					return; // End The Function
 				}
 			}
-			console.log("'stelle.optimize' ending...");
+
+			if (selectedText) {
+
+				console.log("Successfully captured data from editor. Passing to API...");
+
+				vscode.window.withProgress({ // This Function Will Begin The Progress Bar
+					location: vscode.ProgressLocation.Notification, // Make It A Notification
+					title: 'Stelle has begun to optimize your code!', // This Title Will Be What The User Sees
+					cancellable: false, // The User Cannot Cancel This Notification
+				}, async (progress) => { // Progress Will Be Used Based On The Async Promise
+					try {
+						const response = await Optimize(selectedText);
+						if (response) {
+
+							const explanation = response.response;
+							if (explanation) {
+								console.log("Explanation parsed from json...");
+							}
+							
+							const code = response.code;
+							if (code) {
+								console.log("Code parsed from json...");
+							}
+	
+							editor.edit((editBuilder) => {
+								editBuilder.replace(editor.selection, code);
+								vscode.window.showInformationMessage("Stelle has optimized your code!");
+							});
+							console.log("'stelle.optimize' ending...");
+							return Promise.resolve();
+						}
+					} catch (error: any) {
+						console.error(error); // Log the error for debugging
+						vscode.window.showErrorMessage(`An error has occurred: ${error.message}`);
+						console.log("'stelle.optimize' ending due to error...");
+						return Promise.reject(error);
+					}
+				});	
+			} else {
+				vscode.window.showErrorMessage('Unable to optimize without code provided. Please try again.');
+			}
 		}));
+//	#endregion
 }
 
 // This method is called when your extension is deactivated

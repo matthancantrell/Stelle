@@ -68,21 +68,21 @@ export async function callOpenAIStreaming(userData : string) {
         }
 
     } catch (error) {
-        console.error("An errir occurred while calling the OpenAI API: ", error);
+        console.error("An error occurred while calling the OpenAI API: ", error);
         throw error;
     }
 }
 
 export async function Analyze(userData: string) {
     try {
-        console.log(`User Data: ${userData}`);
+        console.log(`User Data:\n${userData}`);
 
         const response = await openai.chat.completions.create({
             model: "gpt-4",
             messages: [
             {
                 "role": "system",
-                "content": "Analyze the code provided and explain it simply to the user.\nGive feedback on the function as well.\nIf there is no implementation, use context to explain what the code should do and how to achieve this.\nIf there is not enough context, inform the user of this.\nIf the code has errors, do not fix them. Point the errors out in your explanation and code comments.\nBe sure to keep your answers concise and 256 characters maximum.\nYou will return a JSON object with the structure of 'response' and 'code'.\nResponse will have your explanation for the user to read and understand.\nCode will be the code they submitted with comments explaining what the code does.\nMaintain formatting of the data when you send it back to ensure clarity and understanding.\nThis includes indention, spacing, etc.\nEven if you are unable to provide feedback to the user, all of your responses must be in the provided JSON format."
+                "content": "Analyze the code provided and give feedback to the user on what they did right and what they could improve upon.\nYou cannot delete code and must send back the user's full code that they provided.\nIf the code has errors, do not fix them.\nPoint the errors out in your explanation and code comments.\nBe sure to keep your answers concise and 256 characters maximum.\nYou will return a JSON object with 'response' for your explanation and 'code' for the code the user submitted with comments providing feedback.\nMaintain the original code's formatting, including indentation and spacing.\nEven if you are unable to provide feedback to the user, all of your responses must be in the provided JSON format.\nEnsure that your JSON response is valid and all special characters are properly escaped."
             },
             {
                 "role": "user",
@@ -90,7 +90,7 @@ export async function Analyze(userData: string) {
             }
             ],
             temperature: 1,
-            max_tokens: 1000,
+            max_tokens: 5000,
             top_p: 1,
             frequency_penalty: 0,
             presence_penalty: 0,
@@ -98,7 +98,7 @@ export async function Analyze(userData: string) {
     
         if (response.choices[0].message.content !== null) {
             console.log(response.choices[0].message.content);
-            var data = response.choices[0].message.content;
+            var data: Record<string, any> = JSON.parse(response.choices[0].message.content);
             return data;
         } else {
             console.log("Error. Data null.");
@@ -111,26 +111,29 @@ export async function Analyze(userData: string) {
 
 export async function Optimize(userData : string) {
     try {
+        console.log(`User Data:\n${userData}`);
+
         const response = await openai.chat.completions.create({
             model: "gpt-4",
             messages: [
             {
-                "role": "user",
-                "content": userData,
+                "role": "system",
+                "content": "Optimize and improve the provided code for speed and efficiency.\nExplain your optimizations through comments in the code.\nOnly add comments where you are making improvements.\nKeep your explanations concise and 256 maximum.\nMaintain the original code's formatting, including indentation and spacing.\nIf there are errors, point them out in comments without fixing them.\nYou will respond with a JSON object with 'response' for your explanation and 'code' for the optimized code with comments.\nMaintain the original code's formatting, including indentation and spacing.\nEven if you are unable to provide feedback to the user, all of your responses must be in the provided JSON format.\nEnsure that your JSON response is valid and all special characters are properly escaped."
             },
             {
-                "role": "system",
-                "content": "Analyze the code provided and optimize it for the user. Make sure to explain what you're doing and why through an explanation and code comments. Only add comments where you are making optimizations. Make sure to only explain any changes made that optimize the code. You do not need to comment line by line if you are not optimizing every line. Be sure to keep your answers concise and 256 characters maximum. You will return a JSON object with the structure of 'response' and 'code'. Response will have your explanation for the user to read and understand. Code will be the code they submitted with comments explaining what the code does. If the code has errors, do not fix them. Point the errors out in your explanation and code comments. Maintain formatting of the data when you send it back to ensure clarity and understanding. This includes indention, spacing, etc."
+                "role": "user",
+                "content": userData,
             }
             ],
             temperature: 1,
-            max_tokens: 256,
+            max_tokens: 5000,
             top_p: 1,
             frequency_penalty: 0,
             presence_penalty: 0,
         });
     
         if (response.choices[0].message.content !== null) {
+            console.log(response.choices[0].message.content);
             var data: Record<string, any> = JSON.parse(response.choices[0].message.content);
             return data;
         } else {
@@ -139,28 +142,5 @@ export async function Optimize(userData : string) {
     } catch (error) {
         console.error("An error occurred while calling the OpenAI API: ", error);
         throw error;
-    }
-}
-
-async function streamTest() {
-    try {
-        const response = await openai.chat.completions.create({
-            model: "gpt-4",
-            messages: [
-            {
-                "role": "system",
-                "content": "You are an assistant. Make sure to help the user with anything they may need."
-            }
-            ],
-            temperature: 1,
-            max_tokens: 256,
-            top_p: 1,
-            frequency_penalty: 0,
-            presence_penalty: 0,
-            stream: true,
-        });
-
-        
-    } catch (error) {
     }
 }

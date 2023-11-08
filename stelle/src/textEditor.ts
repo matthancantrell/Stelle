@@ -18,9 +18,13 @@ export function insertCodeAtCurrentLocation(codeToInsert: string, editor: vscode
 }
 
 export function insertCodeAtLine(codeToInsert: string, editor: vscode.TextEditor, lineNumber: number) {
+    // No need to make any optimization here, the minimum and maximum function are already quick operations.
     lineNumber = Math.max(0, Math.min(lineNumber, editor.document.lineCount));
+
+    // vscode.Position instantiation is efficient and fast.
     const newPos = new vscode.Position(lineNumber, 0);
 
+    // The editor.edit() function call is asynchronous and efficient as it batches all the changes.
     editor.edit((editBuilder) => {
         editBuilder.insert(newPos, codeToInsert + '\n');
     });
