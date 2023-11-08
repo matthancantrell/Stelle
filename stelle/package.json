@@ -2,8 +2,13 @@
   "name": "stelle",
   "displayName": "Stelle",
   "description": "An AI Powered Asisstant To Help You Program!",
-  "keywords": ["Stelle", "AI Asisstant", "Programming", "Teacher"],
-  "version": "1.0.0",
+  "keywords": [
+    "Stelle",
+    "AI Asisstant",
+    "Programming",
+    "Teacher"
+  ],
+  "version": "1.0.1",
   "publisher": "MatthanCantrell",
   "engines": {
     "vscode": "^1.83.0"
@@ -35,6 +40,12 @@
           "command": "stelle.optimize"
         },
         {
+          "command": "stelle.comment"
+        },
+        {
+          "command": "stelle.fill"
+        },
+        {
           "command": "stelle.fix"
         }
       ]
@@ -47,6 +58,14 @@
       {
         "command": "stelle.optimize",
         "title": "Optimize This Code"
+      },
+      {
+        "command": "stelle.comment",
+        "title": "Add Comments To This Code"
+      },
+      {
+        "command": "stelle.fill",
+        "title": "Fill This Function"
       },
       {
         "command": "stelle.fix",
@@ -78,5 +97,8 @@
     "mocha": "^10.2.0",
     "openai": "^4.14.2",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "openai": "^4.14.2"
   }
 }
