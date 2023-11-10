@@ -4,6 +4,7 @@ import { getWebviewContent } from './webview';
 import * as Stelle from './stelle';
 import { callOpenAI, Analyze, Optimize, Comment, Fill } from './OpenAI_API';
 import * as textEditor from './textEditor';
+import * as dependencyManager from './dependencyManager';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -15,6 +16,8 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 
 	// Startup Log To Inform Dev That Extension Is Running
 	console.log('SYSTEM: Congratulations, your extension "stelle" is now active!');
+
+	dependencyManager.start();
 
 	//#region stelle.start
 	context.subscriptions.push(
