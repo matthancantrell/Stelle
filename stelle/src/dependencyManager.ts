@@ -9,6 +9,8 @@ var dependencies: string[] = [
     'openai'
 ]; 
 
+var missingDependencies: string[] = new Array;
+
 function getRootDir() : string { return rootDir; } // Returns Root Directory
 function setRootDir() {
     const scriptPath = __filename; // Gets The Path To THIS File
@@ -23,7 +25,7 @@ export function start() {
         cancellable: false // Don't Allow The User To Cancel This Process
     }, async (progress) => { // Async Due To Needing Other Function To Resolve
         console.log(`Dependency Manager Starting...`); // Inform Dev Of Startup
-        var missingDependencies = checkForAllDependencies(); // Store Array Of Missing Dependencies
+        missingDependencies = checkForAllDependencies(); // Store Array Of Missing Dependencies
         installMissingDependencies(missingDependencies); // Install Missing Dependencies Specified By List That Was Just Captured
         return Promise.resolve(); // Resolve Promise To End Loading Notification
     });
@@ -42,11 +44,11 @@ function doesDirectoryExist(directoryPath: string): boolean { // Finds If A Dire
 
 function checkForDependency(dependency : string): boolean { // Checks If Dependency Is On User Device
     var exists = doesDirectoryExist(rootDir + "/node_modules/" + dependency); // Checks if specified dependency is in the 'node_modules' folder, where all dependencies should go.
-    console.log(`Looking for ${dependency}...`); // Tell Dev Which Dependency Is Being Inquired
+    console.log(`Looking for ${dependency} in 'node_modules'...`); // Tell Dev Which Dependency Is Being Inquired
     if (exists) { // If The Dependency Is Found
-        console.log(`${dependency} located!`); // Inform Dev That Dependency Is Found
+        console.log(`${dependency} located in 'node_modules'!`); // Inform Dev That Dependency Is Found
     } else { // If Dependency Is Not Found
-        console.log(`${dependency} could not be found...`); // Inform Dev That Dependency Is Not Found
+        console.log(`${dependency} could not be found in 'node_modules'...`); // Inform Dev That Dependency Is Not Found
     }
     return exists; // Return Boolean, Informing System Whether Or Not The Dependency Was Found
 }
@@ -59,12 +61,12 @@ function checkForAllDependencies(): string[] { // Checks For All Dependencies A 
         cancellable: false // Specify Whether Or Not The User Can Cancel. Since This Is So Important, The User CANNOT
     }, async (progress) => { // It Is Asynchronous Because It Must Wait On Another Function To Complete
         console.log(`Checking For Any Missing Dependencies...`); // Inform Dev That The Manager Is Checking For Any Missing Dependencies
-
         for (var dependency of dependencies) { // Iterate Through The Stored List Of Dependencies
             if(!checkForDependency(dependency)) { // If The Dependency Is NOT Found
                 missingDependencies.push(dependency); // Push The Missing Dependency Onto The 'missingDependencies' Array
             }
         }
+        console.log('Compiled List Of Missing Dependencies...'); // Inform Dev That 'missingDependencies' Array Is Done Being Pushed To
         return Promise.resolve(); // Return A Resolution To Your Promise, Ending The Loading Notification
     });
     return missingDependencies; // Return The Array Of Missing Dependencies
@@ -79,12 +81,14 @@ function installMissingDependencies(missingDependencies : string[]) { // Install
         }, async (progress) => { // Asynchronous Because It Must Wait For Another Function
             console.log(`Dependencies Missing. Begininng To Install Missing Dependencies...`);
             for (var dependency in missingDependencies) { // Iterate Through The Missing Dependencies
-                console.log(`Installing ${dependency}...`); // Inform Dev That Dependency Is Being Installed
-                executeInstallCmd(dependency); // Execute 'npm install' For Specified Dependency
+                var dep = missingDependencies[dependency];
+                console.log(`Installing ${dep}...`); // Inform Dev That Dependency Is Being Installed
+                executeInstallCmd(dep); // Execute 'npm install' For Specified Dependency
             }
             return Promise.resolve(); // Return A Resolution To Your Promise, Ending The Loading Notification
         });
     } else { // If There Are 0 Missing Dependencies
+        console.log('No Dependencies Missing...');
         return;
     }
 }
