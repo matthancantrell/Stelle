@@ -19,6 +19,39 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Stelle",
+      "properties": {
+        "stelle.chosenAI": {
+          "type": ["string"],
+          "enum": [
+            "OpenAI",
+            "Google Vertex",
+            "Both"
+          ],
+          "enumDescriptions": [
+            "Stelle will only use OpenAI to generate responses.",
+            "Stelle will only use Google Vertex AI To generate responses.",
+            "Stelle will use both Google Vertex and OpenAI to generate responses."
+          ],
+          "default": "OpenAI",
+          "description": "Choose which AI system Stelle will use to generate responses."
+        },
+        "stelle.levelOfAssistance": {
+          "type": ["string"],
+          "enum": [
+            "Teach Me How To Code",
+            "Give Me Code"
+          ],
+          "enumDescriptions": [
+            "Stelle will not provide you with code, but Stelle will try to teach you how to code.",
+            "Stelle will provide you with code."
+          ],
+          "default": "Teach Me How To Code",
+          "description": "Choose how much Stelle helps you."
+        }
+      }
+    },
     "submenus": [
       {
         "id": "stelle.stelleGroup",

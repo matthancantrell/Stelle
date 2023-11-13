@@ -1,23 +1,28 @@
 import * as vscode from 'vscode'; // VSCode API Module
-
 import { getWebviewContent } from './webview';
 import * as Stelle from './stelle';
 import { callOpenAI, Analyze, Optimize, Comment, Fill } from './OpenAI_API';
 import * as textEditor from './textEditor';
 import * as dependencyManager from './dependencyManager';
+/* IMPORTS TO MAKE PROJECT FUNCTION */
+
+var dependencyManagerHasRun = false;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
 export function activate(context: vscode.ExtensionContext) { // All Commands Will Be Stored In Here. Will Be Run Upon Start.
-
+	
 	let webview: vscode.WebviewPanel | undefined = undefined;
 	const editor = vscode.window.activeTextEditor;
 
 	// Startup Log To Inform Dev That Extension Is Running
 	console.log('SYSTEM: Congratulations, your extension "stelle" is now active!');
 
-	dependencyManager.start();
+	if (!dependencyManagerHasRun) {
+		dependencyManager.start();
+		dependencyManagerHasRun = true;
+	}
 
 	//#region stelle.start
 	context.subscriptions.push(
