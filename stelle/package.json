@@ -99,5 +99,8 @@
     "typescript": "^5.2.2"
   },
   "author": "Matthan Cantrell",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "url": "https://github.com/matthancantrell/Stelle"
+  }
 }
