@@ -18,19 +18,27 @@ function setRootDir() {
     return parentDir; // Returns parentDir
 }
 
-export function start() {
-    vscode.window.withProgress({ // Create A Loading Notification
-        location: vscode.ProgressLocation.Notification, // Specify Where
-        title: "Stelle's Built-In Dependency Manager Is Running...", // Specify What
-        cancellable: false // Don't Allow The User To Cancel This Process
-    }, async (progress) => { // Async Due To Needing Other Function To Resolve
-        console.log(`Dependency Manager Starting...`); // Inform Dev Of Startup
-        missingDependencies = checkForAllDependencies(); // Store Array Of Missing Dependencies
-        installMissingDependencies(missingDependencies); // Install Missing Dependencies Specified By List That Was Just Captured
-        return Promise.resolve(); // Resolve Promise To End Loading Notification
-    });
-    vscode.window.showInformationMessage("You have all required dependencies! Have fun coding with Stelle!"); // Inform User Of Completion
-    console.log(`Dependency Manager Shutting Down...`); // Inform Dev of Shutdown
+export async function start() {
+    const choice = await vscode.window.showInformationMessage("All of Stelle's dependencies may not be installed. Run the dependency manager to check?",
+    "Yes",
+    "No");
+
+    if (choice === 'Yes') {
+        vscode.window.withProgress({ // Create A Loading Notification
+            location: vscode.ProgressLocation.Notification, // Specify Where
+            title: "Stelle's Built-In Dependency Manager Is Running...", // Specify What
+            cancellable: false // Don't Allow The User To Cancel This Process
+        }, async (progress) => { // Async Due To Needing Other Function To Resolve
+            console.log(`Dependency Manager Starting...`); // Inform Dev Of Startup
+            missingDependencies = checkForAllDependencies(); // Store Array Of Missing Dependencies
+            installMissingDependencies(missingDependencies); // Install Missing Dependencies Specified By List That Was Just Captured
+            return Promise.resolve(); // Resolve Promise To End Loading Notification
+        });
+        vscode.window.showInformationMessage("You have all required dependencies! Have fun coding with Stelle!"); // Inform User Of Completion
+        console.log(`Dependency Manager Shutting Down...`); // Inform Dev of Shutdown
+    } else {
+        vscode.window.showWarningMessage("Stelle may not work properly without the required dependencies.");
+    }
 }
 
 function doesDirectoryExist(directoryPath: string): boolean { // Finds If A Directory Exists
@@ -55,38 +63,25 @@ function checkForDependency(dependency : string): boolean { // Checks If Depende
 
 function checkForAllDependencies(): string[] { // Checks For All Dependencies A User Needs
     var missingDependencies: string[] = new Array; // Create A New Empty Array To Store Any Missing Dependencies
-    vscode.window.withProgress({ // Create A Progress / Loading Notification
-        location: vscode.ProgressLocation.Notification, // Specify Where
-        title: "Checking For Any Missing Dependencies...", // Specify What
-        cancellable: false // Specify Whether Or Not The User Can Cancel. Since This Is So Important, The User CANNOT
-    }, async (progress) => { // It Is Asynchronous Because It Must Wait On Another Function To Complete
-        console.log(`Checking For Any Missing Dependencies...`); // Inform Dev That The Manager Is Checking For Any Missing Dependencies
-        for (var dependency of dependencies) { // Iterate Through The Stored List Of Dependencies
-            if(!checkForDependency(dependency)) { // If The Dependency Is NOT Found
-                missingDependencies.push(dependency); // Push The Missing Dependency Onto The 'missingDependencies' Array
-            }
+    console.log(`Checking For Any Missing Dependencies...`); // Inform Dev That The Manager Is Checking For Any Missing Dependencies
+    for (var dependency of dependencies) { // Iterate Through The Stored List Of Dependencies
+        if(!checkForDependency(dependency)) { // If The Dependency Is NOT Found
+            missingDependencies.push(dependency); // Push The Missing Dependency Onto The 'missingDependencies' Array
         }
-        console.log('Compiled List Of Missing Dependencies...'); // Inform Dev That 'missingDependencies' Array Is Done Being Pushed To
-        return Promise.resolve(); // Return A Resolution To Your Promise, Ending The Loading Notification
-    });
+    }
+    console.log('Compiled List Of Missing Dependencies...'); // Inform Dev That 'missingDependencies' Array Is Done Being Pushed To
     return missingDependencies; // Return The Array Of Missing Dependencies
 }
 
 function installMissingDependencies(missingDependencies : string[]) { // Installs Missing Dependencies To The User's Device
     if (missingDependencies.length > 0) { // If There Is AT LEAST One Missing Dependency
-        vscode.window.withProgress({ // Create A Loading Notification
-            location: vscode.ProgressLocation.Notification, // Specify Where
-            title: "Installing Missing Dependencies...", // Specify What
-            cancellable: false // Do Not Allow The User To Cancel This Process
-        }, async (progress) => { // Asynchronous Because It Must Wait For Another Function
-            console.log(`Dependencies Missing. Begininng To Install Missing Dependencies...`);
-            for (var dependency in missingDependencies) { // Iterate Through The Missing Dependencies
-                var dep = missingDependencies[dependency];
-                console.log(`Installing ${dep}...`); // Inform Dev That Dependency Is Being Installed
-                executeInstallCmd(dep); // Execute 'npm install' For Specified Dependency
-            }
-            return Promise.resolve(); // Return A Resolution To Your Promise, Ending The Loading Notification
-        });
+        console.log(`Dependencies Missing. Begininng To Install Missing Dependencies...`);
+        for (var dependency in missingDependencies) { // Iterate Through The Missing Dependencies
+            var dep = missingDependencies[dependency];
+            console.log(`Installing ${dep}...`); // Inform Dev That Dependency Is Being Installed
+            executeInstallCmd(dep); // Execute 'npm install' For Specified Dependency
+        }
+        return Promise.resolve(); // Return A Resolution To Your Promise, Ending The Loading Notification
     } else { // If There Are 0 Missing Dependencies
         console.log('No Dependencies Missing...');
         return;

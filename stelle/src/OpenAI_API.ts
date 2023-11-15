@@ -1,4 +1,8 @@
 import OpenAI from 'openai';
+import * as message from './message';
+import * as conversation from './conversation';
+
+var convo = new conversation.Conversation();
 
 const openai = new OpenAI({
     apiKey: "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"
@@ -26,9 +30,9 @@ export async function callOpenAI(userData : string) {
         });
     
         if (response.choices[0].message.content !== null) {
-            var data: Record<string, any> = JSON.parse(response.choices[0].message.content);
-            console.log(data);
-            return data;
+            var mes = new message.Message(response.choices[0].message.role, response.choices[0].message.content);
+            //var data: Record<string, any> = JSON.parse(response.choices[0].message.content);
+            return mes;
         } else {
             console.log("Error. Data null.");
         }
@@ -37,6 +41,8 @@ export async function callOpenAI(userData : string) {
         throw error;
     }
 }
+
+
 
 export async function callOpenAIStreaming(userData : string) {
     try {

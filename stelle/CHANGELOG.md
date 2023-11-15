@@ -47,15 +47,20 @@ Upon release, I asked a few people to try out the application and see how it wou
 
 - Updated `package.json` & `package-lock.json`
 
-## [1.0.2] - 2023-11-10
+## [1.0.2] - 2023-11-13
  
 Previous adjustments to the `package.json` and `package-lock.json` did not fix the issue of `openai` not appearing in user's `node_modules` folder. The newly added fix now manually handles all dependencies the project may need.
 
 ### Changed
 
 - Update `package.json`
+- Update `README.md`
 
 ### Added
 
 - Add `dependencyManager.ts`
 - Added configurations (Extension Settings);
+
+### Fixed
+
+- Resolved dependency installation issue

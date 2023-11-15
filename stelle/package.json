@@ -16,9 +16,32 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "files": [
+    "out/webview.html"
+  ],
+  "activationEvents": [
+    "onView:stelle.view"
+  ],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "stelle",
+          "title": "Stelle",
+          "icon": "assets/stelle.svg"
+        }
+      ]
+    },
+    "views": {
+      "stelle": [
+        {
+          "type": "webview",
+          "id": "stelle.view",
+          "name": "Test Title"
+        }
+      ]
+    },
     "configuration": {
       "title": "Stelle",
       "properties": {
@@ -106,6 +129,14 @@
       },
       {
         "command": "stelle.start",
+        "title": "Start coding with Stelle!"
+      },
+      {
+        "command": "stelle.t1",
+        "title": "Start coding with Stelle!"
+      },
+      {
+        "command": "stelle.t2",
         "title": "Start coding with Stelle!"
       }
     ]

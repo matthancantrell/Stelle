@@ -4,9 +4,14 @@ import * as Stelle from './stelle';
 import { callOpenAI, Analyze, Optimize, Comment, Fill } from './OpenAI_API';
 import * as textEditor from './textEditor';
 import * as dependencyManager from './dependencyManager';
+import * as message from './message';
+import * as conversation from './conversation';
+import { stelleView } from './stelleView';
 /* IMPORTS TO MAKE PROJECT FUNCTION */
 
 var dependencyManagerHasRun = false;
+var messages = new conversation.Conversation;
+var webviewView: vscode.WebviewView | undefined;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -15,9 +20,35 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	
 	let webview: vscode.WebviewPanel | undefined = undefined;
 	const editor = vscode.window.activeTextEditor;
+	var oldMessage: message.Message = new message.Message("", "");
+	const interval = 2000;
 
 	// Startup Log To Inform Dev That Extension Is Running
 	console.log('SYSTEM: Congratulations, your extension "stelle" is now active!');
+
+	const provider = new stelleView(context.extensionUri);
+	context.subscriptions.push(vscode.window.registerWebviewViewProvider(stelleView.viewType, provider));
+
+	function checkVar() {
+		console.log("Checking varaible...");
+		if(provider.getMessage().getRole() !== oldMessage.getRole() && provider.getMessage().getContent() !== oldMessage.getContent()) {
+			console.log("Change in variable: ");
+			messages.addMessage(provider.getMessage());
+			oldMessage = provider.getMessage();
+		}
+	}
+
+	const intervalID = setInterval(() => {
+		checkVar();
+	}, interval);
+
+	context.subscriptions.push(vscode.commands.registerCommand('stelle.t1', () => {
+		provider.test1();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('stelle.t2', () => {
+		provider.test2();
+	}));
 
 	if (!dependencyManagerHasRun) {
 		dependencyManager.start();
@@ -27,7 +58,6 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	//#region stelle.start
 	context.subscriptions.push(
 		vscode.commands.registerCommand('stelle.start', async () => {
-
 			if (webview) { webview.reveal(vscode.ViewColumn.Two); } 
 			else {
 				// Create & Show New Webview
@@ -65,7 +95,10 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 					if (editor) {
 						console.log("Editor is valid");
 						//If data from the OpenAI function is valid, insert this data as code at the current location in the text editor
-						if (stelleData) { textEditor.insertCodeAtCurrentLocation(stelleData["code"], editor); }
+						if (stelleData) {
+							//textEditor.insertCodeAtCurrentLocation(stelleData["code"], editor);
+							messages.addMessage(stelleData); // ADD THE INSERT CODE HERE
+						}
 					}
 				} else { console.log(message.data); } // If the command is not 'submitUserData', log the message data
 			});
