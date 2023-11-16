@@ -14,6 +14,10 @@ export class Conversation {
         this.messages.push(message);
     }
 
+    removeOldestMessage() {
+        this.messages.shift();
+    }
+
     printConversation() {
         for (const mes of this.messages) {
             console.log(mes.getMessage());

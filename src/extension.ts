@@ -26,13 +26,20 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	// Startup Log To Inform Dev That Extension Is Running
 	console.log('SYSTEM: Congratulations, your extension "stelle" is now active!');
 
+	// for(var i = 0; i < 10; i++) {
+	// 	messages.addMessage(new message.Message("user", ((i + 1) +"")));
+	// 	if(messages.getLength() > 5) {
+	// 		console.log("Too many messages. Over by " + (messages.getLength() - 5) + " at " + messages.getMessages()[i].getMessage());
+	// 	}
+	// }
+	// messages.removeOldestMessage();
+	// messages.printConversation();
+
 	const provider = new stelleView(context.extensionUri);
 	context.subscriptions.push(vscode.window.registerWebviewViewProvider(stelleView.viewType, provider));
 
 	function checkVar() {
-		console.log("Checking varaible...");
 		if(provider.getMessage().getRole() !== oldMessage.getRole() && provider.getMessage().getContent() !== oldMessage.getContent()) {
-			console.log("Change in variable: ");
 			messages.addMessage(provider.getMessage());
 			oldMessage = provider.getMessage();
 		}
@@ -54,59 +61,6 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 		dependencyManager.start();
 		dependencyManagerHasRun = true;
 	}
-
-	//#region stelle.start
-	context.subscriptions.push(
-		vscode.commands.registerCommand('stelle.start', async () => {
-			if (webview) { webview.reveal(vscode.ViewColumn.Two); } 
-			else {
-				// Create & Show New Webview
-				webview = vscode.window.createWebviewPanel(
-					'stelle', // Identifies type of webview. Internal use.
-					'Stelle', // Title of the panel. Displayed to user
-					vscode.ViewColumn.Two, // Editor Column to show the new webview panel within
-					{
-						enableScripts: true
-					} // Webview options go here
-				);
-				webview.webview.html = await getWebviewContent();
-				webview.onDidDispose(() => { webview = undefined; },
-					undefined,
-					context.subscriptions
-				);
-			}
-
-			webview.webview.onDidReceiveMessage(async message => {
-				//Log a confirmation message when a message is received
-				console.log('SYSTEM: Message Received...');
-				//Check for the 'submitUserData' command in the received message
-				if (message.command === 'submitUserData') {
-					//Store the user data from the message
-					const userData = message.data;
-					//Log the received user data
-					console.log('User:', userData);
-					//Call OpenAI function using the user's data
-					var stelleData = await callOpenAI(userData);
-
-					//Post the data returned from OpenAI back to the webview
-					webview?.webview.postMessage({ command: 'update', data: stelleData });
-					
-					//If the editor is valid '
-					if (editor) {
-						console.log("Editor is valid");
-						//If data from the OpenAI function is valid, insert this data as code at the current location in the text editor
-						if (stelleData) {
-							//textEditor.insertCodeAtCurrentLocation(stelleData["code"], editor);
-							messages.addMessage(stelleData); // ADD THE INSERT CODE HERE
-						}
-					}
-				} else { console.log(message.data); } // If the command is not 'submitUserData', log the message data
-			});
-			// Sending the 'updateStelleHTML' command back to webview 
-			webview.webview.postMessage({ command: 'updateStelleHTML' });
-		})
-	);
-	//#endregion
 
 //	#region stelle.analyze
 	context.subscriptions.push(
@@ -183,7 +137,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 		vscode.commands.registerCommand('stelle.optimize', async () => {
 			
 			console.log("'stelle.optimize' starting...");
-
+			provider.OptimizeSend();
 			if (!editor) { // If The 'editor' Variable Is NOT Set
 				vscode.window.showWarningMessage('No text editor is active.'); // Inform The User That There Is No Editor Active
 				console.log("'stelle.optimize' ending because no active editor..."); // Inform Dev That 'stelle.analyze' Has Ended

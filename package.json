@@ -8,7 +8,7 @@
     "Programming",
     "Teacher"
   ],
-  "version": "1.0.1",
+  "version": "1.1.1",
   "publisher": "MatthanCantrell",
   "engines": {
     "vscode": "^1.83.0"
@@ -20,7 +20,7 @@
     "out/webview.html"
   ],
   "activationEvents": [
-    "onView:stelle.view"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -39,6 +39,11 @@
           "type": "webview",
           "id": "stelle.view",
           "name": "Test Title"
+        },
+        {
+          "type": "webview",
+          "id": "stelle.view2",
+          "name": "Test Title 2"
         }
       ]
     },
@@ -46,7 +51,9 @@
       "title": "Stelle",
       "properties": {
         "stelle.chosenAI": {
-          "type": ["string"],
+          "type": [
+            "string"
+          ],
           "enum": [
             "OpenAI",
             "Google Vertex",
@@ -61,7 +68,9 @@
           "description": "Choose which AI system Stelle will use to generate responses."
         },
         "stelle.levelOfAssistance": {
-          "type": ["string"],
+          "type": [
+            "string"
+          ],
           "enum": [
             "Teach Me How To Code",
             "Give Me Code"
@@ -147,7 +156,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "build": "tsc && node copy-html.js"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.2",
@@ -159,6 +169,7 @@
     "eslint": "^8.50.0",
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
+    "ncp": "^2.0.0",
     "openai": "^4.17.4",
     "typescript": "^5.2.2"
   },
