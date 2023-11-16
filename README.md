@@ -13,7 +13,7 @@ Stelle uses dependencies to bring you a useful coding assistant. Listed below ar
 
 ### 'openai'
 
-![OpenAI logo](./assets/openai.png)
+![OpenAI logo](https://github.com/matthancantrell/Stelle/blob/master/assets/openai.png?raw=true)
 
 This is the library from OpenAI, creators of ChatGPT which Stelle uses to generate responses for the user.
 
@@ -23,7 +23,7 @@ Don't fret if you do not have these dependencies on your device already! Stelle'
 
 ### 'npm'
 
-![npm logo](./assets/npm.png)
+![npm logo](https://github.com/matthancantrell/Stelle/blob/master/assets/npm.png?raw=true)
 
 npm is the Node Package Manager that comes with installations of NodeJS. Many dependencies for Stelle are NodeJS packages, so npm is essential to fully using and accessing Stelle's capabilities!
 
@@ -47,20 +47,20 @@ npm is often installed with NodeJS. First, let's check if you have NodeJS and np
 
 ### Opening The Run Window
 - On Windows systems, you'll do this by pressing the `Windows Key + R`.<br><br>
-![The Windows 'run' window](./assets/run.png)<br>
+![The Windows 'run' window](https://github.com/matthancantrell/Stelle/blob/master/assets/run.png?raw=true)<br>
 ```This window should appear once you do! This is the "Run" window which we will use to access the command prompt.```
 <br><br>
 
 ### Opening The Command Prompt
 - In the textbox, type `cmd` and press the Enter key.<br><br>
-![The Windows command prompt window](./assets/cmd.png)
+![The Windows command prompt window](https://github.com/matthancantrell/Stelle/blob/master/assets/cmd.png?raw=true)
 ```This is the command prompt! Now we can check if we already have NodeJS or npm.```
 <br><br>
 
 ### Checking For npm
 
 - Within the command prompt, type `npm -v`.<br><br>
-![This is the result of running the `npm -v` command.](./assets/npmv.png)
+![This is the result of running the `npm -v` command.](https://github.com/matthancantrell/Stelle/blob/master/assets/npmv.png?raw=true)
 ```If you do not receive this or something similar, you do not have npm installed.```
 
 ### What To Do From Here
@@ -69,14 +69,14 @@ Now that we've checked if npm is on your current system, we can go one of two wa
 
 - If you got a response from `npm -v` that indicated a version, good job! You have npm and can use Stelle!<br><br>
 - If you didn't get a response from `npm -v` that indicated a version, please go to [this Github link](https://github.com/coreybutler/nvm-windows/releases) and scroll down until you see a tab labelled `assets`.<br><br>
-![This is the assets tab on the linked Github](./assets/assets.png)
+![This is the assets tab on the linked Github](https://github.com/matthancantrell/Stelle/blob/master/assets/assets.png?raw=true)
 Select the `nvm-setup.exe` file which will begin downloading it. Once it is downloaded, run it and go through the set-up menus. More often than not, you can just press `Next` or `Okay`.<br><br>
 
 - Once you've run the installer, open the command prompt again. Type `nvm` and press enter to execute the command.<br><br>
-![This is the resulting command prompt after executing the `nvm` command](./assets/nvm.png)
+![This is the resulting command prompt after executing the `nvm` command](https://github.com/matthancantrell/Stelle/blob/master/assets/nvm.png?raw=true)
 ```If you receive this screen or something similar, nvm is installed on your device!```
 
 - Lastly, once you have nvm installed and are still in the command prompt, type `nvm install node` and press enter.<br><br>
-![This is the resulting command prompt after executing `nvm install node`.](./assets/nvminstallnode.png)
+![This is the resulting command prompt after executing `nvm install node`.](https://github.com/matthancantrell/Stelle/blob/master/assets/nvminstallnode.png?raw=true)
 
 ### Now congratulate yourself for installing npm and go use Stelle!
