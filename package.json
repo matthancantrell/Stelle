@@ -2,6 +2,7 @@
   "name": "stelle",
   "displayName": "Stelle",
   "description": "An AI Powered Asisstant To Help You Program!",
+  "icon": "assets/stelle.png",
   "keywords": [
     "Stelle",
     "AI Asisstant",
@@ -14,6 +15,8 @@
     "vscode": "^1.83.0"
   },
   "categories": [
+    "Machine Learning",
+    "Education",
     "Other"
   ],
   "files": [
@@ -29,7 +32,7 @@
         {
           "id": "stelle",
           "title": "Stelle",
-          "icon": "assets/stelle.svg"
+          "icon": "assets/stelle.png"
         }
       ]
     },
@@ -176,6 +179,7 @@
   "author": "Matthan Cantrell",
   "license": "ISC",
   "repository": {
+    "type": "github",
     "url": "https://github.com/matthancantrell/Stelle"
   }
 }
