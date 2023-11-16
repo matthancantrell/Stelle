@@ -53,14 +53,14 @@ npm is often installed with NodeJS. First, let's check if you have NodeJS and np
 
 ### Opening The Command Prompt
 - In the textbox, type `cmd` and press the Enter key.<br><br>
-![The Windows command prompt window](https://github.com/matthancantrell/Stelle/blob/master/assets/cmd.png?raw=true)
+![The Windows command prompt window](https://github.com/matthancantrell/Stelle/blob/master/assets/cmd.png?raw=true)<br>
 ```This is the command prompt! Now we can check if we already have NodeJS or npm.```
 <br><br>
 
 ### Checking For npm
 
 - Within the command prompt, type `npm -v`.<br><br>
-![This is the result of running the `npm -v` command.](https://github.com/matthancantrell/Stelle/blob/master/assets/npmv.png?raw=true)
+![This is the result of running the `npm -v` command.](https://github.com/matthancantrell/Stelle/blob/master/assets/npmv.png?raw=true)<br>
 ```If you do not receive this or something similar, you do not have npm installed.```
 
 ### What To Do From Here
@@ -69,14 +69,14 @@ Now that we've checked if npm is on your current system, we can go one of two wa
 
 - If you got a response from `npm -v` that indicated a version, good job! You have npm and can use Stelle!<br><br>
 - If you didn't get a response from `npm -v` that indicated a version, please go to [this Github link](https://github.com/coreybutler/nvm-windows/releases) and scroll down until you see a tab labelled `assets`.<br><br>
-![This is the assets tab on the linked Github](https://github.com/matthancantrell/Stelle/blob/master/assets/assets.png?raw=true)
+![This is the assets tab on the linked Github](https://github.com/matthancantrell/Stelle/blob/master/assets/assets.png?raw=true)<br>
 Select the `nvm-setup.exe` file which will begin downloading it. Once it is downloaded, run it and go through the set-up menus. More often than not, you can just press `Next` or `Okay`.<br><br>
 
 - Once you've run the installer, open the command prompt again. Type `nvm` and press enter to execute the command.<br><br>
-![This is the resulting command prompt after executing the `nvm` command](https://github.com/matthancantrell/Stelle/blob/master/assets/nvm.png?raw=true)
+![This is the resulting command prompt after executing the `nvm` command](https://github.com/matthancantrell/Stelle/blob/master/assets/nvm.png?raw=true)<br>
 ```If you receive this screen or something similar, nvm is installed on your device!```
 
 - Lastly, once you have nvm installed and are still in the command prompt, type `nvm install node` and press enter.<br><br>
-![This is the resulting command prompt after executing `nvm install node`.](https://github.com/matthancantrell/Stelle/blob/master/assets/nvminstallnode.png?raw=true)
+![This is the resulting command prompt after executing `nvm install node`.](https://github.com/matthancantrell/Stelle/blob/master/assets/nvminstallnode.png?raw=true)<br>
 
 ### Now congratulate yourself for installing npm and go use Stelle!
