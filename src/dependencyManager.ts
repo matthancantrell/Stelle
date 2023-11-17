@@ -6,7 +6,8 @@ import * as fs from 'fs';
 const openAIDep = 'openai';
 const rootDir = setRootDir();
 var dependencies: string[] = [
-    'openai'
+    'openai',
+    'dotenv'
 ]; 
 
 var missingDependencies: string[] = new Array;

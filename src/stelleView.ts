@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as m from './message';
-import * as ai from './OpenAI_API';
+import { ChatAPI } from './OpenAI_API';
 import * as textEditor from './textEditor';
 import * as path from 'path';
 import { getWebviewContent } from './webview';
@@ -11,9 +11,12 @@ export class stelleView implements vscode.WebviewViewProvider {
 
     public static readonly viewType = 'stelle.view';
     private view?: vscode.WebviewView;
+    private chatAPI: ChatAPI;
     public message = new m.Message("", "");
 
-    constructor(private readonly extensionUri: vscode.Uri) {}
+    constructor(private readonly extensionUri: vscode.Uri, chatAPI: ChatAPI) {
+        this.chatAPI = chatAPI;
+    }
 
     resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, token: vscode.CancellationToken): void {
 
@@ -35,7 +38,7 @@ export class stelleView implements vscode.WebviewViewProvider {
                 case 'chatSent': {
                     console.log("StelleView -> chatSent begin...");
                     this.setMessage("user", message.data);
-                    var x = await ai.callOpenAI(message.data);
+                    var x = await this.chatAPI.callOpenAI(message.data);
                     if(x?.content) {
                         var json = JSON.parse(x?.content);
                         console.log("StelleView -> Response From AI: ",json.response);
