@@ -5,17 +5,13 @@ import * as dependencyManager from './dependencyManager';
 import * as message from './message';
 import * as conversation from './conversation';
 import { stelleView } from './stelleView';
-import { GVT } from './GoogleVertex_API';
-const {EndpointServiceClient} = require('@google-cloud/aiplatform');
-import axios from 'axios';
+import { escape } from 'querystring';
 /* IMPORTS TO MAKE PROJECT FUNCTION */
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '.env')}); // MAKES THE .ENV WORK
 
 const stelle = new Stelle();
 var chatAPI = new ChatAPI(stelle.getOpenAIKey());
-
-var dependencyManagerHasRun = false;
 var messages = new conversation.Conversation;
 
 // This method is called when your extension is activated
@@ -29,32 +25,6 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	const provider = new stelleView(context.extensionUri, chatAPI); // Create New WebviewView Provider
 	context.subscriptions.push(vscode.window.registerWebviewViewProvider(stelleView.viewType, provider)); // Register The WebviewView Provider
 
-	var jsonObj = {
-		"role": "matthan",
-		"content": "matthan freaking did it",
-		"convID": 222
-	};
-
-	async function invokeAzureFunction() {
-		const functionUrl = 'https://stelleapimanagement.azure-api.net/StelleDotnetAPI/MessagesWrite';
-		const key = "3d38184e16574446bc312e3ddc3d6cce";
-		const payload = { role: 'matthan', content: 'woah, matthan did it', conversationID: 222 }; // Customize the payload as needed
-		const headers = {
-			'Content-Type': 'application/json',
-			'x-functions-Key': "d727787bc2e04fc9a16a0495f4a797eb"
-		}; // Adjust the content type if needed
-	  
-		try {
-		  const response = await axios.post(functionUrl, payload, { headers });
-		  console.log('Response:', response.data);
-		} catch (error: any) {
-		  console.error('Error:', error.message);
-		}
-	  }
-	  
-	  // Invoke the Azure Function
-	  invokeAzureFunction();
-
 	function checkVar() { // Function That Checks For New Message From System
 		if(provider.getMessage().getRole() !== oldMessage.getRole() && provider.getMessage().getContent() !== oldMessage.getContent()) {
 			messages.addMessage(provider.getMessage());
@@ -66,18 +36,52 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 		checkVar();
 	}, interval);
 
-	context.subscriptions.push(vscode.commands.registerCommand('stelle.t1', () => {
-		provider.test1();
-	}));
-
-	context.subscriptions.push(vscode.commands.registerCommand('stelle.t2', () => {
-		provider.test2();
-	}));
-
-	if (!dependencyManagerHasRun) {
-		dependencyManager.start();
-		dependencyManagerHasRun = true;
+	//#region <-- DEPENDENCY MANAGER -->
+	if (!context.globalState.get('dependencyManagerHasRun')) { // If the extension cannot get this, it is the first time it has been ran.
+		context.globalState.update('dependencyManagerHasRun', false); // Create this global value
+		dependencyManager.start(context); // Run the dependency manager
+	} else if (context.globalState.get('dependencyManagerHasRun') === false) { // If the extension can get this and the value is false, prompt the user to activate the dependency manager
+		dependencyManager.start(context); // Run the dependency manager
 	}
+	//#endregion
+
+	//#region <-- MAIN STELLE COMMANDS -->
+	context.subscriptions.push(vscode.commands.registerCommand('stelle.optimize', async () => {
+
+		stelle.handleCommand("Optimize");
+
+		provider.AnalyzeSend();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('stelle.analyze', async () => {
+
+		stelle.handleCommand("Analyze");
+
+		provider.AnalyzeSend();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('stelle.comment', async () => {
+
+		stelle.handleCommand("Comment");
+
+		provider.AnalyzeSend();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('stelle.fill', async () => {
+
+		stelle.handleCommand("Fill");
+
+		provider.AnalyzeSend();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('stelle.fix', async () => {
+
+		stelle.handleCommand("Debug");
+
+		provider.AnalyzeSend();
+	}));
+	//#endregion
+
 // //	#region stelle.analyze
 // 	context.subscriptions.push(
 // 		vscode.commands.registerCommand('stelle.analyze', async () => {

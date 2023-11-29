@@ -19,7 +19,7 @@ function setRootDir() {
     return parentDir; // Returns parentDir
 }
 
-export async function start() {
+export async function start(context: any) {
     const choice = await vscode.window.showInformationMessage("All of Stelle's dependencies may not be installed. Run the dependency manager to check?",
     "Yes",
     "No");
@@ -36,6 +36,9 @@ export async function start() {
             return Promise.resolve(); // Resolve Promise To End Loading Notification
         });
         vscode.window.showInformationMessage("You have all required dependencies! Have fun coding with Stelle!"); // Inform User Of Completion
+
+        context.globalState.update('dependencyManagerHasRun', true);
+
         console.log(`Dependency Manager Shutting Down...`); // Inform Dev of Shutdown
     } else {
         vscode.window.showWarningMessage("Stelle may not work properly without the required dependencies.");

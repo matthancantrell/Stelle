@@ -30,6 +30,8 @@ export class stelleView implements vscode.WebviewViewProvider {
             ]
         };
 
+        console.log("<-- SET UP WEBVIEW OPTIONS -->");
+
         this.view.webview.html = this.getWebviewContent(webviewView.webview);
 
         this.view.webview.onDidReceiveMessage(async message => {
@@ -85,29 +87,29 @@ export class stelleView implements vscode.WebviewViewProvider {
         }
     }
 
-    OptimizeSend() {
+    public OptimizeSend() {
         if (this.view) { // If The View Is Not Null
             this.view.webview.postMessage({ command: 'optimizeSend' }); // Post Message
         }
     }
 
-    OptimizeReceive(response: string, code: string) {
+    public OptimizeReceive(response: string, code: string) {
         if (this.view) { // If The View Is Not Null
             this.view.webview.postMessage({ command: 'optimizeReceive', response: response, code: code  }); // Post Message
         }
     }
 
-    AnalyzeSend() {}
-    AnalyzeReceive() {}
+    public AnalyzeSend() {}
+    public AnalyzeReceive() {}
 
-    FillSend() {}
-    FillReceive() {}
+    public FillSend() {}
+    public FillReceive() {}
 
-    CommentSend() {}
-    CommentReceive() {}
+    public CommentSend() {}
+    public CommentReceive() {}
 
-    DebugSend() {}
-    DebugReceive() {}
+    public DebugSend() {}
+    public DebugReceive() {}
 
     getMessage(): m.Message { return this.message; }
     setMessage(role: string, content: string) { this.message = new m.Message(role, content); }
