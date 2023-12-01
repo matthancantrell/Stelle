@@ -40,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	//#region <-- MAIN STELLE COMMANDS -->
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.optimize', async () => {
 
-		//stelle.handleCommand("Optimize");
+		stelle.handleCommand("Optimize");
 
 		// provider.AnalyzeSend();
 	}));

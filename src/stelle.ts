@@ -81,51 +81,51 @@ export class Stelle {
         }
     }
 
-    // async handleCommand(command: string) {
+    async handleCommand(command: string) {
 
-    //     var input: string | undefined;
-    //     if(this.editorIsValid()) {
-    //         input = await this.getSelectedText();
-    //     }
+        var input: string | undefined;
+        if(this.editorIsValid()) {
+            input = await this.getSelectedText();
+        }
 
-    //     console.log();
+        console.log();
 
-    //     if (input) {
-    //         var response: Record<string, any> | undefined;
+        if (input) {
+            var response: Record<string, any> | undefined;
 
-    //         vscode.window.withProgress({
-    //             location: vscode.ProgressLocation.Notification,
-    //             title: "Stelle has begun to " + command.toLocaleLowerCase() + " your code!",
-    //             cancellable: false,
-    //         }, async (progress) => {
-    //             switch(command) {
-    //                 case "Analyze": {
-    //                     response = await this.chat.Analyze(input + '');
-    //                     break;
-    //                 }
-    //                 case "Optimize": {
-    //                     response = await this.chat.Optimize(input + '');
-    //                     break;
-    //                 }
-    //                 case "Fill": {
-    //                     response = await this.chat.Fill(input + '');
-    //                     break;
-    //                 }
-    //                 case "Comment": {
-    //                     response = await this.chat.Comment(input + '');
-    //                     break;
-    //                 }
-    //                 case "Debug": {
-    //                     response = await this.chat.Debug(input + '');
-    //                     break;
-    //                 }
-    //             }
+            vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: "Stelle has begun to " + command.toLocaleLowerCase() + " your code!",
+                cancellable: false,
+            }, async (progress) => {
+                switch(command) {
+                    case "Analyze": {
+                        response = await this.chat.Analyze(input + '');
+                        break;
+                    }
+                    case "Optimize": {
+                        response = await this.chat.Optimize(input + '');
+                        break;
+                    }
+                    case "Fill": {
+                        response = await this.chat.Fill(input + '');
+                        break;
+                    }
+                    case "Comment": {
+                        response = await this.chat.Comment(input + '');
+                        break;
+                    }
+                    case "Debug": {
+                        response = await this.chat.Debug(input + '');
+                        break;
+                    }
+                }
 
-    //             if (response) {
-    //                 const explanation = response.response;
-    //                 const code = response.code;
-    //             }
-    //         });
-    //     }
-    // }
+                if (response) {
+                    const explanation = response.response;
+                    const code = response.code;
+                }
+            });
+        }
+    }
 }
