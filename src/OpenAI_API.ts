@@ -21,7 +21,25 @@ export class ChatAPI {
     private getAPIKey() { return this.apiKey; }
     //#endregion
 
-    async callOpenAI(userData : string) {
+    private getSystemPrompt(command: string, levelOfAssistance: string) {
+        switch(levelOfAssistance) {
+            case "Give Me Code": {
+                this.getPromptFromCommandGive(command);
+                break;
+            }
+
+            case "Teach Me How To Code": {
+                this.getPromptFromCommandTeach(command);
+                break;
+            }
+        }
+    }
+
+    private getPromptFromCommandGive(command: string) {}
+
+    private getPromptFromCommandTeach(command: string) {}
+
+    async callOpenAI(userData : string, levelOfAssistance: string) {
         try {
             const response = await this.openai.chat.completions.create({
                 model: "gpt-4",
@@ -53,6 +71,10 @@ export class ChatAPI {
             console.error("An error occurred while calling the OpenAI API: ", error);
             throw error;
         }
+    }
+
+    async ChatCommand(command: string) {
+
     }
 
     async Analyze(userData: string) {

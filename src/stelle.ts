@@ -5,6 +5,14 @@ import * as vscode from 'vscode';
 
 export class Stelle {
 
+    //#region <-- CLASS SETUP -->
+    chat: ChatAPI;
+
+    constructor() {
+        this.chat = new ChatAPI(this.getOpenAIKey());
+    }
+    //#endregion
+
     getLevelOfAssistance() {
         const configName = 'stelle.levelOfAssistance';
         const config = vscode.workspace.getConfiguration();
@@ -35,6 +43,19 @@ export class Stelle {
         }
     }
 
+    levelOfAssistanceSwitch() {
+        var levelOfAssistance = this.getLevelOfAssistance();
+
+        switch(levelOfAssistance) {
+            case "Give Me Code": {
+                break;
+            }
+            case "Teach Me How To Code": {
+                
+            }
+        }
+    }
+
     async getSelectedText() {
         const editor = vscode.window.activeTextEditor;
 
@@ -54,39 +75,57 @@ export class Stelle {
                     return;
                 }
             }
+            else {
+                return selectedText;
+            }
         }
     }
 
     async handleCommand(command: string) {
 
+        var input: string | undefined;
         if(this.editorIsValid()) {
-            var input = await  this.getSelectedText();
+            input = await this.getSelectedText();
         }
 
-        var chat = new ChatAPI(this.getOpenAIKey());
+        console.log();
 
+        if (input) {
+            var response: Record<string, any> | undefined;
 
-        switch(command) {
-            case "Analyze": {
-                console.log("<-- ANALYZE CALLED -->");
-                break;
-            }
-            case "Optimize": {
-                console.log("<-- OPTIMIZE CALLED -->");
-                break;
-            }
-            case "Fill": {
-                console.log("<-- FILL CALLED -->");
-                break;
-            }
-            case "Comment": {
-                console.log("<-- COMMENT CALLED -->");
-                break;
-            }
-            case "Debug": {
-                console.log("<-- DEBUG CALLED -->");
-                break;
-            }
+            vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: "Stelle has begun to " + command.toLocaleLowerCase() + " your code!",
+                cancellable: false,
+            }, async (progress) => {
+                switch(command) {
+                    case "Analyze": {
+                        response = await this.chat.Analyze(input + '');
+                        break;
+                    }
+                    case "Optimize": {
+                        response = await this.chat.Optimize(input + '');
+                        break;
+                    }
+                    case "Fill": {
+                        response = await this.chat.Fill(input + '');
+                        break;
+                    }
+                    case "Comment": {
+                        response = await this.chat.Comment(input + '');
+                        break;
+                    }
+                    case "Debug": {
+                        response = await this.chat.Debug(input + '');
+                        break;
+                    }
+                }
+
+                if (response) {
+                    const explanation = response.response;
+                    const code = response.code;
+                }
+            });
         }
     }
 }

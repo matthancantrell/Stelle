@@ -40,7 +40,7 @@ export class stelleView implements vscode.WebviewViewProvider {
                 case 'chatSent': {
                     console.log("StelleView -> chatSent begin...");
                     this.setMessage("user", message.data);
-                    var x = await this.chatAPI.callOpenAI(message.data);
+                    var x = await this.chatAPI.callOpenAI("", message.data);
                     if(x?.content) {
                         var json = JSON.parse(x?.content);
                         console.log("StelleView -> Response From AI: ",json.response);
