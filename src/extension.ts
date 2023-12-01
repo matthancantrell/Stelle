@@ -23,8 +23,8 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	var oldMessage: message.Message = new message.Message("", ""); // Stores Previous Message Received From Webview
 	const interval = 2000; // How Often The System Checks For New Message From Webview
 
-	// const provider = new stelleView(context.extensionUri, chatAPI); // Create New WebviewView Provider
-	// context.subscriptions.push(vscode.window.registerWebviewViewProvider(stelleView.viewType, provider)); // Register The WebviewView Provider
+	const provider = new stelleView(context.extensionUri); // Create New WebviewView Provider
+	context.subscriptions.push(vscode.window.registerWebviewViewProvider(stelleView.viewType, provider)); // Register The WebviewView Provider
 
 	// function checkVar() { // Function That Checks For New Message From System
 	// 	if(provider.getMessage().getRole() !== oldMessage.getRole() && provider.getMessage().getContent() !== oldMessage.getContent()) {

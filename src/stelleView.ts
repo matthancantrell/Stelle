@@ -11,12 +11,9 @@ export class stelleView implements vscode.WebviewViewProvider {
 
     public static readonly viewType = 'stelle.view';
     private view?: vscode.WebviewView;
-    private chatAPI: ChatAPI;
     public message = new m.Message("", "");
 
-    constructor(private readonly extensionUri: vscode.Uri, chatAPI: ChatAPI) {
-        this.chatAPI = chatAPI;
-    }
+    constructor(private readonly extensionUri: vscode.Uri) {}
 
     resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, token: vscode.CancellationToken): void {
 
@@ -40,19 +37,19 @@ export class stelleView implements vscode.WebviewViewProvider {
                 case 'chatSent': {
                     console.log("StelleView -> chatSent begin...");
                     this.setMessage("user", message.data);
-                    var x = await this.chatAPI.callOpenAI("", message.data);
-                    if(x?.content) {
-                        var json = JSON.parse(x?.content);
-                        console.log("StelleView -> Response From AI: ",json.response);
-                        console.log("StelleView -> Code From AI: ",json.code);
-                        console.log("StelleView -> Code Provided: ",json.codeProvided);
+                    // var x = await this.chatAPI.callOpenAI("", message.data);
+                    // if(x?.content) {
+                    //     var json = JSON.parse(x?.content);
+                    //     console.log("StelleView -> Response From AI: ",json.response);
+                    //     console.log("StelleView -> Code From AI: ",json.code);
+                    //     console.log("StelleView -> Code Provided: ",json.codeProvided);
 
-                        if(json.codeProvided) {
-                            this.view?.webview.postMessage({ command: 'newMessageWithCode', data: json.response, code: json.code });
-                        } else {
-                            this.view?.webview.postMessage({ command: 'newMessage', data: json.response });
-                        }
-                    }
+                    //     if(json.codeProvided) {
+                    //         this.view?.webview.postMessage({ command: 'newMessageWithCode', data: json.response, code: json.code });
+                    //     } else {
+                    //         this.view?.webview.postMessage({ command: 'newMessage', data: json.response });
+                    //     }
+                    // }
                     console.log("StelleView -> chatSent end...");
                     break;
                 }
