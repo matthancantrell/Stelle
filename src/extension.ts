@@ -47,35 +47,35 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	//#region <-- MAIN STELLE COMMANDS -->
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.optimize', async () => {
 
-		stelle.handleCommand("Optimize");
+		//stelle.handleCommand("Optimize");
 
 		// provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.analyze', async () => {
 
-		stelle.handleCommand("Analyze");
+		//stelle.handleCommand("Analyze");
 
 		// provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.comment', async () => {
 
-		stelle.handleCommand("Comment");
+		//stelle.handleCommand("Comment");
 
 		// provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.fill', async () => {
 
-		stelle.handleCommand("Fill");
+		//stelle.handleCommand("Fill");
 
 		// provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.fix', async () => {
 
-		stelle.handleCommand("Debug");
+		//stelle.handleCommand("Debug");
 
 		// provider.AnalyzeSend();
 	}));
