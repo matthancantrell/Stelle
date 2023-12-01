@@ -41,12 +41,7 @@
         {
           "type": "webview",
           "id": "stelle.view",
-          "name": "Test Title"
-        },
-        {
-          "type": "webview",
-          "id": "stelle.view2",
-          "name": "Test Title 2"
+          "name": "Talk With Stelle!"
         }
       ]
     },

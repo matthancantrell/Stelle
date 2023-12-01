@@ -17,6 +17,8 @@ var messages = new conversation.Conversation;
 // Your extension is activated the very first time the command is executed
 
 export function activate(context: vscode.ExtensionContext) { // All Commands Will Be Stored In Here. Will Be Run Upon Start.
+
+	dependencyManager.start();
 	
 	var oldMessage: message.Message = new message.Message("", ""); // Stores Previous Message Received From Webview
 	const interval = 2000; // How Often The System Checks For New Message From Webview
@@ -34,15 +36,6 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	// const intervalID = setInterval(() => {
 	// 	checkVar();
 	// }, interval);
-
-	//#region <-- DEPENDENCY MANAGER -->
-	if (!context.globalState.get('dependencyManagerHasRun')) { // If the extension cannot get this, it is the first time it has been ran.
-		context.globalState.update('dependencyManagerHasRun', false); // Create this global value
-		dependencyManager.start(context); // Run the dependency manager
-	} else if (context.globalState.get('dependencyManagerHasRun') === false) { // If the extension can get this and the value is false, prompt the user to activate the dependency manager
-		dependencyManager.start(context); // Run the dependency manager
-	}
-	//#endregion
 
 	//#region <-- MAIN STELLE COMMANDS -->
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.optimize', async () => {
