@@ -6,11 +6,11 @@ import * as vscode from 'vscode';
 export class Stelle {
 
     //#region <-- CLASS SETUP -->
-    // chat: ChatAPI;
+     chat: ChatAPI;
 
-    // constructor() {
-    //     this.chat = new ChatAPI(this.getOpenAIKey());
-    // }
+    constructor() {
+        this.chat = new ChatAPI(this.getOpenAIKey());
+    }
     //#endregion
 
     getLevelOfAssistance() {
