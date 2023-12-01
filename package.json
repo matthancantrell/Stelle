@@ -163,8 +163,7 @@
     "build": "tsc && node copy-html.js"
   },
   "dependencies": {
-    "dotenv": "16.3.1",
-    "openai": "^4.17.4"
+    "dotenv": "16.3.1"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.2",
