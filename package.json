@@ -163,6 +163,7 @@
     "build": "tsc && node copy-html.js"
   },
   "dependencies": {
+    "openai": "^4.20.1",
     "dotenv": "16.3.1"
   },
   "devDependencies": {
@@ -176,7 +177,7 @@
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
     "ncp": "^2.0.0",
-    "openai": "^4.17.4",
+    "openai": "^4.20.1",
     "typescript": "^5.2.2"
   },
   "author": "Matthan Cantrell",
