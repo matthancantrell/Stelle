@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'; // VSCode API Module
 import { Stelle } from './stelle';
-import { ChatAPI } from './OpenAI_API';
 import * as dependencyManager from './dependencyManager';
 import * as message from './message';
 import * as conversation from './conversation';
@@ -11,7 +10,7 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '.env')}); // MAKES THE .ENV WORK
 
 const stelle = new Stelle();
-var chatAPI = new ChatAPI(stelle.getOpenAIKey());
+//var chatAPI = new ChatAPI(stelle.getOpenAIKey());
 var messages = new conversation.Conversation;
 
 // This method is called when your extension is activated
@@ -22,19 +21,19 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	var oldMessage: message.Message = new message.Message("", ""); // Stores Previous Message Received From Webview
 	const interval = 2000; // How Often The System Checks For New Message From Webview
 
-	const provider = new stelleView(context.extensionUri, chatAPI); // Create New WebviewView Provider
-	context.subscriptions.push(vscode.window.registerWebviewViewProvider(stelleView.viewType, provider)); // Register The WebviewView Provider
+	// const provider = new stelleView(context.extensionUri, chatAPI); // Create New WebviewView Provider
+	// context.subscriptions.push(vscode.window.registerWebviewViewProvider(stelleView.viewType, provider)); // Register The WebviewView Provider
 
-	function checkVar() { // Function That Checks For New Message From System
-		if(provider.getMessage().getRole() !== oldMessage.getRole() && provider.getMessage().getContent() !== oldMessage.getContent()) {
-			messages.addMessage(provider.getMessage());
-			oldMessage = provider.getMessage();
-		}
-	}
+	// function checkVar() { // Function That Checks For New Message From System
+	// 	if(provider.getMessage().getRole() !== oldMessage.getRole() && provider.getMessage().getContent() !== oldMessage.getContent()) {
+	// 		messages.addMessage(provider.getMessage());
+	// 		oldMessage = provider.getMessage();
+	// 	}
+	// }
 
-	const intervalID = setInterval(() => {
-		checkVar();
-	}, interval);
+	// const intervalID = setInterval(() => {
+	// 	checkVar();
+	// }, interval);
 
 	//#region <-- DEPENDENCY MANAGER -->
 	if (!context.globalState.get('dependencyManagerHasRun')) { // If the extension cannot get this, it is the first time it has been ran.
@@ -50,35 +49,35 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 
 		stelle.handleCommand("Optimize");
 
-		provider.AnalyzeSend();
+		// provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.analyze', async () => {
 
 		stelle.handleCommand("Analyze");
 
-		provider.AnalyzeSend();
+		// provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.comment', async () => {
 
 		stelle.handleCommand("Comment");
 
-		provider.AnalyzeSend();
+		// provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.fill', async () => {
 
 		stelle.handleCommand("Fill");
 
-		provider.AnalyzeSend();
+		// provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.fix', async () => {
 
 		stelle.handleCommand("Debug");
 
-		provider.AnalyzeSend();
+		// provider.AnalyzeSend();
 	}));
 	//#endregion
 
