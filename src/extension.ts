@@ -5,12 +5,13 @@ import * as message from './message';
 import * as conversation from './conversation';
 import { stelleView } from './stelleView';
 import { escape } from 'querystring';
+import { ChatAPI } from './OpenAI_API';
 /* IMPORTS TO MAKE PROJECT FUNCTION */
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '.env')}); // MAKES THE .ENV WORK
 
 const stelle = new Stelle();
-//var chatAPI = new ChatAPI(stelle.getOpenAIKey());
+var chatAPI = new ChatAPI(stelle.getOpenAIKey());
 var messages = new conversation.Conversation;
 
 // This method is called when your extension is activated
@@ -23,54 +24,54 @@ export function activate(context: vscode.ExtensionContext) { // All Commands Wil
 	var oldMessage: message.Message = new message.Message("", ""); // Stores Previous Message Received From Webview
 	const interval = 2000; // How Often The System Checks For New Message From Webview
 
-	const provider = new stelleView(context.extensionUri); // Create New WebviewView Provider
+	const provider = new stelleView(context.extensionUri, chatAPI); // Create New WebviewView Provider
 	context.subscriptions.push(vscode.window.registerWebviewViewProvider(stelleView.viewType, provider)); // Register The WebviewView Provider
 
-	// function checkVar() { // Function That Checks For New Message From System
-	// 	if(provider.getMessage().getRole() !== oldMessage.getRole() && provider.getMessage().getContent() !== oldMessage.getContent()) {
-	// 		messages.addMessage(provider.getMessage());
-	// 		oldMessage = provider.getMessage();
-	// 	}
-	// }
+	function checkVar() { // Function That Checks For New Message From System
+		if(provider.getMessage().getRole() !== oldMessage.getRole() && provider.getMessage().getContent() !== oldMessage.getContent()) {
+			messages.addMessage(provider.getMessage());
+			oldMessage = provider.getMessage();
+		}
+	}
 
-	// const intervalID = setInterval(() => {
-	// 	checkVar();
-	// }, interval);
+	const intervalID = setInterval(() => {
+		checkVar();
+	}, interval);
 
 	//#region <-- MAIN STELLE COMMANDS -->
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.optimize', async () => {
 
 		stelle.handleCommand("Optimize");
 
-		// provider.AnalyzeSend();
+		provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.analyze', async () => {
 
-		//stelle.handleCommand("Analyze");
+		stelle.handleCommand("Analyze");
 
-		// provider.AnalyzeSend();
+		provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.comment', async () => {
 
-		//stelle.handleCommand("Comment");
+		stelle.handleCommand("Comment");
 
-		// provider.AnalyzeSend();
+		provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.fill', async () => {
 
-		//stelle.handleCommand("Fill");
+		stelle.handleCommand("Fill");
 
-		// provider.AnalyzeSend();
+		provider.AnalyzeSend();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('stelle.fix', async () => {
 
-		//stelle.handleCommand("Debug");
+		stelle.handleCommand("Debug");
 
-		// provider.AnalyzeSend();
+		provider.AnalyzeSend();
 	}));
 	//#endregion
 

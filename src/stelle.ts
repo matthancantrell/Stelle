@@ -124,6 +124,10 @@ export class Stelle {
                 if (response) {
                     const explanation = response.response;
                     const code = response.code;
+
+                    if (explanation) {
+                        vscode.window.showInformationMessage("Stelle " + command + ": " + explanation);
+                    }
                 }
             });
         }

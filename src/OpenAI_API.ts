@@ -151,8 +151,6 @@ export class ChatAPI {
 
     async Comment(userData : string) {
         try {
-            console.log(`User Data:\n${userData}`);
-
             const response = await this.openai.chat.completions.create({
                 model: "gpt-4",
                 messages: [
