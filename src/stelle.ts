@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 export class Stelle {
 
     //#region <-- CLASS SETUP -->
-     chat: ChatAPI;
+    chat: ChatAPI;
 
     constructor() {
         this.chat = new ChatAPI(this.getOpenAIKey());
@@ -81,6 +81,10 @@ export class Stelle {
         }
     }
 
+    returnErrorString(command: string): string {
+        return "Stelle " + command + ": There was an error capturing data from the API! Please try again or report your error to the extension store page.";
+    }
+
     async handleCommand(command: string) {
 
         var input: string | undefined;
@@ -88,10 +92,8 @@ export class Stelle {
             input = await this.getSelectedText();
         }
 
-        console.log();
-
         if (input) {
-            var response: Record<string, any> | undefined;
+            var response: any;
 
             vscode.window.withProgress({
                 location: vscode.ProgressLocation.Notification,
@@ -100,22 +102,27 @@ export class Stelle {
             }, async (progress) => {
                 switch(command) {
                     case "Analyze": {
+                        console.log("<-- ANALYZE -->");
                         response = await this.chat.Analyze(input + '');
                         break;
                     }
                     case "Optimize": {
+                        console.log("<-- OPTIMIZE -->");
                         response = await this.chat.Optimize(input + '');
                         break;
                     }
                     case "Fill": {
+                        console.log("<-- FILL -->");
                         response = await this.chat.Fill(input + '');
                         break;
                     }
                     case "Comment": {
+                        console.log("<-- COMMENT -->");
                         response = await this.chat.Comment(input + '');
                         break;
                     }
                     case "Debug": {
+                        console.log("<-- DEBUG -->");
                         response = await this.chat.Debug(input + '');
                         break;
                     }
@@ -123,10 +130,21 @@ export class Stelle {
 
                 if (response) {
                     const explanation = response.response;
-                    const code = response.code;
 
                     if (explanation) {
+                        console.log("Exp: " + explanation);
                         vscode.window.showInformationMessage("Stelle " + command + ": " + explanation);
+                    } else {
+                        vscode.window.showErrorMessage(this.returnErrorString(command));
+                    }
+
+                    const code = response.code;
+
+                    if (code) {
+                        console.log("Code: " + code);
+                        // insert code
+                    } else {
+                        vscode.window.showErrorMessage("JSON FIXER ERROR: ", this.returnErrorString(command));
                     }
                 }
             });
