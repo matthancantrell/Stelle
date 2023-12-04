@@ -1,5 +1,7 @@
 import { ChatAPI } from './OpenAI_API';
 import * as vscode from 'vscode';
+import * as textEditor from './textEditor';
+import { AnyTxtRecord } from 'dns';
 
 // Integration of both API's should go in this file.
 
@@ -7,9 +9,11 @@ export class Stelle {
 
     //#region <-- CLASS SETUP -->
     chat: ChatAPI;
+    editor: any;
 
     constructor() {
         this.chat = new ChatAPI(this.getOpenAIKey());
+        this.editor = vscode.window.activeTextEditor;
     }
     //#endregion
 
@@ -20,6 +24,16 @@ export class Stelle {
         
         if (selectedValue === "Give Me Code") { return "Give Me Code"; }
         if (selectedValue === "Teach Me How To Code") { return "Teach Me How To Code"; }
+    }
+
+    getEditor() {
+        if (vscode.window.activeTextEditor) {
+            this.editor = vscode.window.activeTextEditor;
+            return this.editor;
+        } else {
+            vscode.window.showWarningMessage("No text editor available.");
+            return null;
+        }
     }
 
     getOpenAIKey(): string {
@@ -129,22 +143,41 @@ export class Stelle {
                 }
 
                 if (response) {
-                    const explanation = response.response;
 
+                    const explanation = response.response;
                     if (explanation) {
-                        console.log("Exp: " + explanation);
                         vscode.window.showInformationMessage("Stelle " + command + ": " + explanation);
                     } else {
                         vscode.window.showErrorMessage(this.returnErrorString(command));
                     }
 
-                    const code = response.code;
+                    const codeProvided = response.codeProvided;
+                    if (codeProvided) {
+                        const code = response.code;
+                        if (code) {
+                            this.getEditor();
+                            if (this.editor) {
+                                const choice = await vscode.window.showInformationMessage("Would you like to add Stelle's code to your project? If you are unsatisfied with what you get, pressing `ctrl + z` will undo the effect.",
+                                "Yes",
+                                "No");
 
-                    if (code) {
-                        console.log("Code: " + code);
-                        // insert code
-                    } else {
-                        vscode.window.showErrorMessage("JSON FIXER ERROR: ", this.returnErrorString(command));
+                                if (choice === 'Yes') {
+                                    vscode.window.withProgress({ // Create A Loading Notification
+                                        location: vscode.ProgressLocation.Notification, // Specify Where
+                                        title: "Adding Code...", // Specify What
+                                        cancellable: false // Don't Allow The User To Cancel This Process
+                                    }, async (progress) => { // Async Due To Needing Other Function To Resolve
+                                        await textEditor.insertCodeAtCurrentLocation(code, this.getEditor());
+                                        return Promise.resolve(); // Resolve Promise To End Loading Notification
+                                    });
+                                    vscode.window.showInformationMessage("Stelle's code has been inserted! Enjoy!"); // Inform User Of Completion
+                                } else {
+                                    vscode.window.showWarningMessage("Stelle's code will not be inserted.");
+                                }
+                            }
+                        } else {
+                            vscode.window.showErrorMessage("JSON ERROR, PLEASE REPORT ERROR TO EXTENSION REPOSITORYS: ", this.returnErrorString(command));
+                        }
                     }
                 }
             });

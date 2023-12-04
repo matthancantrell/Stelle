@@ -195,7 +195,7 @@ export class ChatAPI {
                     "content": userData,
                 }
                 ],
-                temperature: 0.5,
+                temperature: 1,
                 max_tokens: 6000,
                 top_p: 1,
                 frequency_penalty: 0,
