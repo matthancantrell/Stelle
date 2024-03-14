@@ -1,7 +1,7 @@
 import { ChatAPI } from './OpenAI_API';
 import * as vscode from 'vscode';
 import * as textEditor from './textEditor';
-import { AnyTxtRecord } from 'dns';
+import axios from 'axios';
 
 // Integration of both API's should go in this file.
 

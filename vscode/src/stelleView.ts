@@ -3,9 +3,6 @@ import * as fs from 'fs';
 import * as m from './message';
 import { ChatAPI } from './OpenAI_API';
 import * as textEditor from './textEditor';
-import * as path from 'path';
-import { getWebviewContent } from './webview';
-import { resolvePtr } from 'dns';
 
 export class stelleView implements vscode.WebviewViewProvider {
 
