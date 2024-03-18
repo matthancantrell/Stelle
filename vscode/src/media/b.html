@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .chat-box {
+      max-width: 300px;
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      position: relative;
+      word-wrap: break-word; /* Add this line to enable word wrapping */
+    }
+
+    .code-box {
+      max-width: 300px;
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #5bc0de; /* Blue border for code messages */
+      background-color: #2a2a2a; /* Dark background for code messages */
+      color: #ffffff; /* White text for code messages */
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    .code-content {
+      white-space: pre-wrap; /* Preserve white spaces and line breaks */
+    }
+
+    .timestamp {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: #888;
+      font-size: 12px;
+    }
+
+    #input-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      background-color: #f0f0f0;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    #message-input {
+      flex: 1;
+      padding: 5px;
+    }
+
+    .insert-button {
+      margin-top: 10px;
+      background-color: #5bc0de;
+      color: #ffffff;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #send-button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="chat-container"></div>
+
+  <div id="input-container">
+    <input type="text" id="message-input" placeholder="Type your message...">
+    <button id="send-button" onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    const vscode = acquireVsCodeApi();
+
+    var maxChatHistory = 5; // Maximum number of chat messages to display
+    var chatHistory = [];
+    var isTurn = true;
+
+    function addChatBox(message, isCode = false) {
+    var chatContainer = document.getElementById("chat-container");
+
+    // Create elements
+    var messageBox = document.createElement("div");
+    messageBox.className = isCode ? "code-box" : "chat-box";
+
+    var messageContent = document.createElement("pre");
+    messageContent.className = "code-content";
+    messageContent.textContent = message;
+
+    var timestampDiv = document.createElement("div");
+    timestampDiv.className = "timestamp";
+    timestampDiv.textContent = getCurrentTimestamp();
+
+    // Append elements to message box
+    messageBox.appendChild(messageContent);
+    messageBox.appendChild(timestampDiv);
+
+    // For code messages, add an "Insert into Editor" button
+    if (isCode) {
+        var insertButton = document.createElement("button");
+        insertButton.className = "insert-button";
+        insertButton.textContent = "Insert @ Current Editor Location";
+        insertButton.onclick = function () {
+            vscode.postMessage({ command: 'insertCodeIntoEditor', data: message });
+        };
+        messageBox.appendChild(insertButton);
+    }
+
+    // Append message box to container
+    chatContainer.appendChild(messageBox);
+
+    // Add the message to the chat history
+    chatHistory.push({ message: message, timestamp: getCurrentTimestamp(), isCode: isCode });
+
+    // Check and remove the oldest message if exceeding the limit
+    if (chatHistory.length > maxChatHistory) {
+      var removedMessage = chatHistory.shift();
+      removeOldestChatBox();
+    }
+  }
+
+    function getCurrentTimestamp() {
+        const now = new Date();
+        this.hours = ((now.getHours() % 12 || 12) < 10 ? '0' : '') + now.getHours();
+        this.minutes = (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+        this.ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+        var time = this.hours + ":" + this.minutes + " " + this.ampm;
+        return time;
+    }
+
+    function removeOldestChatBox() {
+      var chatContainer = document.getElementById("chat-container");
+      var oldestChatBox = chatContainer.firstChild;
+      if (oldestChatBox) {
+        chatContainer.removeChild(oldestChatBox);
+      }
+    }
+
+    function sendMessage() {
+        if(isTurn) {
+            var messageInput = document.getElementById("message-input");
+            var message = messageInput.value.trim();
+
+            if (message !== "") {
+                addChatBox(message);
+                messageInput.value = ""; // Clear the input field after sending a message
+                isTurn = false;
+                vscode.postMessage({ command: 'chatSent', data: message });
+            }
+        }
+    }
+
+    window.addEventListener('message', event => {
+        console.log("Received!");
+      const message = event.data;
+
+      switch (message.command) {
+        case 'newMessage': {
+            addChatBox(message.data);
+            isTurn = true;
+            break;
+        }
+        case 'newMessageWithCode': {
+            addChatBox(message.data);
+            addChatBox(message.code, true);
+            isTurn = true;
+            break;
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

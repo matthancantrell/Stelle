@@ -1,0 +1,42 @@
+/* Define a CSS class to add a border */
+.bordered {
+    border: 2px solid white;
+    padding: 10px;
+    background: gray;
+}
+
+textarea { 
+    border-radius: 10px;
+}
+
+.product-font {
+    font-family: 'Product Sans';
+    /* src: url('ProductSans-Regular.otf'); */
+}
+    
+/* body {
+    font-family: 'Product Sans';
+} */
+
+.large-text {
+    font-size: 2em;
+}
+
+.medium-text {
+    font-size: 2em;
+}
+
+.non-resizeable {
+    resize: none;
+    width: 90%
+}
+
+.centered {
+    text-align: center;
+    display: block;
+    margin: 0 auto; /* Center the element horizontally on the page */
+}
+
+body { color: white; background-color: black; }
+
+.center-text { text-align: center; }
