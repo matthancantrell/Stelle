@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turn-Based Chat Example</title>
+  <style>
+    .chatBox {
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 15px;
+      width: 80%;
+      position: relative;
+    }
+
+    .time-text-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .time-right {
+      color: #aaa;
+    }
+
+    .chatText {
+      margin-top: 10px; /* Add space between timestamp and text */
+    }
+  </style>
+</head>
+<body>
+
+  <input type="text" id="messageInput" placeholder="Type your message">
+  <button id="sendMessageButton">Send Message</button>
+
+  <script>
+    var isUserTurn = true;
+    var maxChatBoxes = 5;
+    var chatBoxes = [];
+
+    function getCurrentTime() {
+      var now = new Date();
+      var hours = now.getHours().toString().padStart(2, '0');
+      var minutes = now.getMinutes().toString().padStart(2, '0');
+      return hours + ':' + minutes;
+    }
+
+    function sendMessage() {
+      var messageInput = document.getElementById('messageInput');
+
+      // Get the message text
+      var messageText = messageInput.value;
+
+      if (messageText.trim() !== '') {
+        // Check if it's the user's turn to send a message
+        if (isUserTurn) {
+          // Create a new div for the user's message
+          var newMessage = document.createElement('div');
+          newMessage.classList.add('chatBox');
+
+          // Create a container for timestamp and text
+          var timeTextContainer = document.createElement('div');
+          timeTextContainer.classList.add('time-text-container');
+
+          // Add a span element for the timestamp with the time-right class
+          var timestampSpan = document.createElement('span');
+          timestampSpan.textContent = getCurrentTime();
+          timestampSpan.classList.add('time-right');
+
+          // Add user message text to the div
+          var messageTextElement = document.createElement('p');
+          messageTextElement.classList.add('chatText');
+          messageTextElement.textContent = messageText;
+
+          // Append elements to the container
+          timeTextContainer.appendChild(timestampSpan);
+          timeTextContainer.appendChild(messageTextElement);
+
+          // Append the container to the new message
+          newMessage.appendChild(timeTextContainer);
+
+          // Append the new message to the body or another container
+          document.body.appendChild(newMessage);
+
+          // Add the new message to the chatBoxes array
+          chatBoxes.push(newMessage);
+
+          // Clear the message input
+          messageInput.value = '';
+
+          // Check if the number of chat boxes exceeds the limit
+          if (chatBoxes.length > maxChatBoxes) {
+            // Remove the oldest chat box from the DOM
+            var oldestChatBox = chatBoxes.shift();
+            document.body.removeChild(oldestChatBox);
+          }
+
+          // It's now the other participant's turn
+          isUserTurn = false;
+
+          // Simulate the other participant responding (you can replace this with actual logic)
+          simulateOtherParticipantResponse();
+        } else {
+          // It's not the user's turn, so you can inform the user or take other actions
+          alert('Wait for your turn!');
+        }
+      }
+    }
+
+    function simulateOtherParticipantResponse() {
+      // Simulate the other participant responding after a delay
+      setTimeout(function() {
+        var newMessage = document.createElement('div');
+        newMessage.classList.add('chatBox');
+
+        // Create a container for timestamp and text
+        var timeTextContainer = document.createElement('div');
+        timeTextContainer.classList.add('time-text-container');
+
+        // Add a span element for the timestamp with the time-right class
+        var timestampSpan = document.createElement('span');
+        timestampSpan.textContent = getCurrentTime();
+        timestampSpan.classList.add('time-right');
+
+        // Add other participant response text to the div
+        var messageTextElement = document.createElement('p');
+        messageTextElement.classList.add('chatText');
+        messageTextElement.textContent = 'This is a response.';
+
+        // Append elements to the container
+        timeTextContainer.appendChild(timestampSpan);
+        timeTextContainer.appendChild(messageTextElement);
+
+        // Append the container to the new message
+        newMessage.appendChild(timeTextContainer);
+
+        // Append the new message to the body or another container
+        document.body.appendChild(newMessage);
+
+        // Add the new message to the chatBoxes array
+        chatBoxes.push(newMessage);
+
+        // Check if the number of chat boxes exceeds the limit
+        if (chatBoxes.length > maxChatBoxes) {
+          // Remove the oldest chat box from the DOM
+          var oldestChatBox = chatBoxes.shift();
+          document.body.removeChild(oldestChatBox);
+        }
+
+        // Now it's the user's turn again
+        isUserTurn = true;
+      }, 2000); // You can adjust the delay as needed
+    }
+
+    // Event listener for the button click
+    var sendMessageButton = document.getElementById('sendMessageButton');
+    sendMessageButton.addEventListener('click', sendMessage);
+  </script>
+
+</body>
+</html>

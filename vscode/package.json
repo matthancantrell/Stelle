@@ -1,0 +1,185 @@
+{
+  "name": "stelle",
+  "displayName": "Stelle",
+  "description": "An AI Powered Asisstant To Help You Program!",
+  "icon": "assets/stelle.png",
+  "keywords": [
+    "Stelle",
+    "AI Asisstant",
+    "Programming",
+    "Teacher"
+  ],
+  "version": "1.1.16",
+  "publisher": "MatthanCantrell",
+  "engines": {
+    "vscode": "^1.83.0"
+  },
+  "categories": [
+    "Machine Learning",
+    "Education",
+    "Other"
+  ],
+  "files": [
+    "out/webview.html"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "stelle",
+          "title": "Stelle",
+          "icon": "assets/stelle.png"
+        }
+      ]
+    },
+    "views": {
+      "stelle": [
+        {
+          "type": "webview",
+          "id": "stelle.view",
+          "name": "Talk With Stelle!"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Stelle",
+      "properties": {
+        "stelle.chosenAI": {
+          "type": [
+            "string"
+          ],
+          "enum": [
+            "OpenAI",
+            "Google Vertex",
+            "Both"
+          ],
+          "enumDescriptions": [
+            "Stelle will only use OpenAI to generate responses.",
+            "Stelle will only use Google Vertex AI To generate responses.",
+            "Stelle will use both Google Vertex and OpenAI to generate responses."
+          ],
+          "default": "OpenAI",
+          "description": "Choose which AI system Stelle will use to generate responses."
+        },
+        "stelle.levelOfAssistance": {
+          "type": [
+            "string"
+          ],
+          "enum": [
+            "Teach Me How To Code",
+            "Give Me Code"
+          ],
+          "enumDescriptions": [
+            "Stelle will not provide you with code, but Stelle will try to teach you how to code.",
+            "Stelle will provide you with code."
+          ],
+          "default": "Teach Me How To Code",
+          "description": "Choose how much Stelle helps you."
+        }
+      }
+    },
+    "submenus": [
+      {
+        "id": "stelle.stelleGroup",
+        "label": "Stelle"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "stelle.stelleGroup",
+          "label": "Stelle"
+        }
+      ],
+      "stelle.stelleGroup": [
+        {
+          "command": "stelle.analyze"
+        },
+        {
+          "command": "stelle.optimize"
+        },
+        {
+          "command": "stelle.comment"
+        },
+        {
+          "command": "stelle.fill"
+        },
+        {
+          "command": "stelle.fix"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "stelle.analyze",
+        "title": "Analyze This Code"
+      },
+      {
+        "command": "stelle.optimize",
+        "title": "Optimize This Code"
+      },
+      {
+        "command": "stelle.comment",
+        "title": "Add Comments To This Code"
+      },
+      {
+        "command": "stelle.fill",
+        "title": "Fill This Function"
+      },
+      {
+        "command": "stelle.fix",
+        "title": "Fix This Code"
+      },
+      {
+        "command": "stelle.start",
+        "title": "Start coding with Stelle!"
+      },
+      {
+        "command": "stelle.t1",
+        "title": "Start coding with Stelle!"
+      },
+      {
+        "command": "stelle.t2",
+        "title": "Start coding with Stelle!"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "build": "tsc && node copy-html.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.3",
+    "dotenv": "16.3.1",
+    "openai": "^4.20.1"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.2",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.83.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.3",
+    "@typescript-eslint/parser": "^6.7.3",
+    "@vscode/test-electron": "^2.3.4",
+    "eslint": "^8.50.0",
+    "glob": "^10.3.3",
+    "mocha": "^10.2.0",
+    "ncp": "^2.0.0",
+    "openai": "^4.20.1",
+    "typescript": "^5.2.2"
+  },
+  "author": "Matthan Cantrell",
+  "license": "ISC",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/matthancantrell/Stelle"
+  }
+}
