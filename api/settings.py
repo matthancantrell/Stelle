@@ -37,12 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
     'rest_framework',
     'openai',
     'dotenv'
-=======
->>>>>>> 6669772b296a279c54858632a833e63cd38dc533
 ]
 
 MIDDLEWARE = [

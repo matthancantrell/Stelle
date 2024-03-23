@@ -16,15 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-<<<<<<< HEAD
 from views import TestView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('OpenAI/', TestView)
-=======
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
->>>>>>> 6669772b296a279c54858632a833e63cd38dc533
 ]
