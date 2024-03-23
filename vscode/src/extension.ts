@@ -20,8 +20,6 @@ var messages = new conversation.Conversation;
 export function activate(context: vscode.ExtensionContext) { // All Commands Will Be Stored In Here. Will Be Run Upon Start.
 
 	dependencyManager.start();
-
-	stelle.testAPI();
 	
 	var oldMessage: message.Message = new message.Message("", ""); // Stores Previous Message Received From Webview
 	const interval = 2000; // How Often The System Checks For New Message From Webview
